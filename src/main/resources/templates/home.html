@@ -5,22 +5,28 @@
     <title>NACOS Payment Platform</title>
 </head>
 <body>
-<form>
-    <input id="user-first-name" type="text" placeholder="First Name"/>
-    <input id="user-last-name" type="text" placeholder="Last Name"/>
-    <input id="user-email" type="email" placeholder="Email Address"/>
-    <input id="user-id-no" type="email" placeholder="Matric/JAMB Number"/>
+<form th:action="@{/generate-invoice}" th:object="${paymentForm}" method="post">
+    <input id="user-first-name" type="text" th:field="*{firstName}" placeholder="First Name"/>
+    <input id="user-last-name" type="text" th:field="*{lastName}" placeholder="Last Name"/>
+    <input id="user-email" type="email" th:field="*{email}" placeholder="Email Address"/>
+    <input id="user-reg-number" type="text" th:field="*{registrationNumber}" placeholder="Matric/JAMB Number"/>
+    <input id="user-phone-no" type="tel" th:field="*{phoneNumber}" placeholder="Phone Number"/>
 
-    <select id="user-level">
-        <option>Level</option>
-        <option>100 Level</option>
-        <option>200 Level</option>
-        <option>200 Level (DE)</option>
-        <option>300 Level</option>
-        <option>400 Level</option>
+
+    <select id="user-level" th:field="*{level}">
+        <option value="">Level</option>
+        <option value="100">100 Level</option>
+        <option value="200">200 Level</option>
+        <option value="200DE">200 Level (DE)</option>
+        <option value="300">300 Level</option>
+        <option value="400">400 Level</option>
     </select>
 
-    <input id="user-phone-no" type="number" placeholder="Phone Number"/>
+    <select id="user-program" th:field="*{program}">
+        <option value="">Program</option>
+        <option value="CS">Computer Science</option>
+        <option value="SE">Software Engineering</option>
+    </select>
 
     <button type="submit">Proceed</button>
 </form>
