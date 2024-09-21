@@ -33,6 +33,10 @@ public class Student {
     @JoinColumn(name = "level_id", nullable = false)
     private Level level;
 
+    @ManyToOne
+    @JoinColumn(name = "academic_year_id", nullable = false)
+    private AcademicYear academicYear;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -99,6 +103,14 @@ public class Student {
 
     public void setLevel(Level level) {
         this.level = level;
+    }
+
+    public AcademicYear getAcademicYear() {
+        return academicYear;
+    }
+
+    public void setAcademicYear(AcademicYear academicYear) {
+        this.academicYear = academicYear;
     }
 
     public LocalDateTime getCreatedAt() {
