@@ -1,5 +1,6 @@
 package com.nacosfunaabpay.paymentplatform.model;
 
+import com.nacosfunaabpay.paymentplatform.model.entity.AuditableEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -10,10 +11,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "academic_year")
-public class AcademicYear {
+public class AcademicYear extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long academicYearId;
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String year;
@@ -36,12 +37,12 @@ public class AcademicYear {
     @OneToMany(mappedBy = "academicYear")
     private Set<Student> students;
 
-    public Long getAcademicYearId() {
-        return academicYearId;
+    public Long getId() {
+        return id;
     }
 
-    public void setAcademicYearId(Long academicYearId) {
-        this.academicYearId = academicYearId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getYear() {

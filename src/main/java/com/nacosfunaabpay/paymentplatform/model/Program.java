@@ -1,12 +1,11 @@
 package com.nacosfunaabpay.paymentplatform.model;
 
-import com.nacosfunaabpay.paymentplatform.model.entity.AuditableEntity;
 import jakarta.persistence.*;
 
 import java.util.Set;
 
 @Entity
-public class Program extends AuditableEntity {
+public class Program {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;

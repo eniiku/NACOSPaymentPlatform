@@ -9,10 +9,10 @@ import java.util.Set;
 public class Level {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long levelId;
+    private Long id;
 
     @Column(nullable = false, unique = true)
-    private String levelName;
+    private String name;
 
     @Column(nullable = false)
     private BigDecimal duesAmount;
@@ -20,20 +20,20 @@ public class Level {
     @OneToMany(mappedBy = "level")
     private Set<Student> students;
 
-    public Long getLevelId() {
-        return levelId;
+    public Long getId() {
+        return id;
     }
 
-    public void setLevelId(Long levelId) {
-        this.levelId = levelId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public String getLevelName() {
-        return levelName;
+    public String getName() {
+        return name;
     }
 
-    public void setLevelName(String levelName) {
-        this.levelName = levelName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public BigDecimal getDuesAmount() {
