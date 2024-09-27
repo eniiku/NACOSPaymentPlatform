@@ -2,6 +2,9 @@ package com.nacosfunaabpay.paymentplatform.service;
 
 import com.nacosfunaabpay.paymentplatform.dtos.PaymentFormDTO;
 import com.nacosfunaabpay.paymentplatform.exceptions.StudentNotFoundException;
+import com.nacosfunaabpay.paymentplatform.model.AcademicYear;
+import com.nacosfunaabpay.paymentplatform.model.Level;
+import com.nacosfunaabpay.paymentplatform.model.Program;
 import com.nacosfunaabpay.paymentplatform.model.Student;
 import com.nacosfunaabpay.paymentplatform.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
@@ -14,6 +17,15 @@ import java.time.LocalDateTime;
 public class StudentServiceImpl implements StudentService {
     @Autowired
     private StudentRepository studentRepository;
+
+    @Autowired
+    private ProgramService programService;
+
+    @Autowired
+    private LevelService levelService;
+
+    @Autowired
+    private AcademicYearService academicYearService;
 
     @Override
     @Transactional
@@ -45,7 +57,15 @@ public class StudentServiceImpl implements StudentService {
         student.setEmail(paymentForm.getEmail());
         student.setPhoneNumber(paymentForm.getPhoneNumber());
         student.setRegistrationNumber(paymentForm.getRegistrationNumber());
-        // TODO: Set program, level, and academic year based on the PaymentForm data
+
+        Program program = programService.findOrCreateProgram(paymentForm.getProgram());
+        Level level = levelService.findLevel(paymentForm.getLevel());
+        AcademicYear academicYear = academicYearService.getCurrentAcademicYear();
+
+        student.setProgram(program);
+        student.setLevel(level);
+        student.setAcademicYear(academicYear);
+
         return createOrUpdateStudent(student);
     }
 }
