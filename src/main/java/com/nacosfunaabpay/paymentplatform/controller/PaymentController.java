@@ -4,9 +4,11 @@ import com.nacosfunaabpay.paymentplatform.dtos.PaymentFormDTO;
 import com.nacosfunaabpay.paymentplatform.enums.InvoiceStatus;
 import com.nacosfunaabpay.paymentplatform.model.Invoice;
 import com.nacosfunaabpay.paymentplatform.model.Payment;
+import com.nacosfunaabpay.paymentplatform.model.Receipt;
 import com.nacosfunaabpay.paymentplatform.service.FlutterwaveService;
 import com.nacosfunaabpay.paymentplatform.service.InvoiceService;
 import com.nacosfunaabpay.paymentplatform.service.PaymentService;
+import com.nacosfunaabpay.paymentplatform.service.ReceiptService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    private ReceiptService receiptService;
 
     @PostMapping("/process-payment")
     public String processPayment(@RequestParam("invoiceId") Long invoiceId,
@@ -57,6 +62,10 @@ public class PaymentController {
 
                 // Create payment record
                 Payment payment = paymentService.createPaymentRecord(invoice, transactionId, "Flutterwave");
+
+                // Generate receipt and send email
+                Receipt receipt = receiptService.generateReceipt(payment);
+                receiptService.sendReceiptEmail(receipt.getId());
 
                 sessionStatus.setComplete(); // Clear the session attributes
                 return "redirect:/payment-success";

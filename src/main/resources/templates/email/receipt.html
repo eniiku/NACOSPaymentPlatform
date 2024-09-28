@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Receipt</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Receipt for NACOS Payment</h1>
+<p>Dear <span th:text="${model.student.name}"></span>,</p>
+<p>Thank you for your payment. Here are the details of your receipt:</p>
+<ul>
+    <li>Receipt Number: <span th:text="${model.receiptNumber}"></span></li>
+    <li>Amount Paid: ₦<span th:text="${model.amount}"></span></li>
+    <li>Payment Date: <span th:text="${#temporals.format(model.receiptDate, 'dd-MM-yyyy HH:mm')}"></span></li>
+    <li>Invoice Number: <span th:text="${model.invoice.id}"></span></li>
+</ul>
+<p>This receipt confirms that your payment has been successfully processed.</p>
+<p>If you have any questions, please don't hesitate to contact us.</p>
+<p>Best regards,<br/>NACOS Payment Team</p>
+</body>
+</html>
