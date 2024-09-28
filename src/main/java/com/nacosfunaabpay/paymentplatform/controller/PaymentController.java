@@ -3,8 +3,10 @@ package com.nacosfunaabpay.paymentplatform.controller;
 import com.nacosfunaabpay.paymentplatform.dtos.PaymentFormDTO;
 import com.nacosfunaabpay.paymentplatform.enums.InvoiceStatus;
 import com.nacosfunaabpay.paymentplatform.model.Invoice;
+import com.nacosfunaabpay.paymentplatform.model.Payment;
 import com.nacosfunaabpay.paymentplatform.service.FlutterwaveService;
 import com.nacosfunaabpay.paymentplatform.service.InvoiceService;
+import com.nacosfunaabpay.paymentplatform.service.PaymentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ public class PaymentController {
 
     @Autowired
     private FlutterwaveService flutterwaveService;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @PostMapping("/process-payment")
     public String processPayment(@RequestParam("invoiceId") Long invoiceId,
@@ -47,7 +52,12 @@ public class PaymentController {
             boolean isSuccessful = flutterwaveService.verifyPayment(transactionId);
             if (isSuccessful) {
                 logger.info("Payment successful for invoice: {}", invoiceId);
+                Invoice invoice = invoiceService.getInvoiceById(invoiceId);
                 invoiceService.updateInvoiceStatus(invoiceId, InvoiceStatus.PAID);
+
+                // Create payment record
+                Payment payment = paymentService.createPaymentRecord(invoice, transactionId, "Flutterwave");
+
                 sessionStatus.setComplete(); // Clear the session attributes
                 return "redirect:/payment-success";
             } else {
