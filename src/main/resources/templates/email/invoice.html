@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Invoice</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Invoice for NACOS Payment</h1>
+<p>Dear <span th:text="${invoice.student.name}"></span>,</p>
+<p>Thank you for your payment. Here are the details of your invoice:</p>
+<ul>
+    <li>Invoice Number: <span th:text="${invoice.id}"></span></li>
+    <li>Amount: ₦<span th:text="${invoice.amountDue}"></span></li>
+    <li>Date: <span th:text="${#temporals.format(invoice.invoiceDate, 'dd-MM-yyyy
+HH:mm')}"></span></li>
+    <li>Status: <span th:text="${invoice.invoiceStatus}"></span></li>
+</ul>
+<p>If you have any questions, please don't hesitate to contact us.</p>
+<p>Best regards,<br/>NACOS Payment Team</p>
+</body>
+</html>

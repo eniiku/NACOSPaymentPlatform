@@ -6,11 +6,13 @@ import com.nacosfunaabpay.paymentplatform.model.Invoice;
 
 
 public interface InvoiceService {
-    String generateInvoice(PaymentFormDTO paymentForm);
+    Long generateInvoice(PaymentFormDTO paymentForm);
 
     Invoice getInvoiceById(Long invoiceId);
 
     void updateInvoiceStatus(Long invoiceId, InvoiceStatus status);
+
+    void sendInvoiceEmail(Long invoiceId);
 
     int calculateAmount();
 }

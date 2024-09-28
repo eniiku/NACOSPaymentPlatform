@@ -11,6 +11,7 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,9 +28,12 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
     @Transactional
-    public String generateInvoice(PaymentFormDTO paymentForm) {
+    public Long generateInvoice(PaymentFormDTO paymentForm) {
         logger.info("Generating invoice for student: {}", paymentForm.getEmail());
 
         Student student;
@@ -56,7 +60,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice savedInvoice = invoiceRepository.save(invoice);
         logger.info("Invoice generated successfully. Invoice ID: {}", savedInvoice.getId());
 
-        return "INV-" + savedInvoice.getId();
+        return savedInvoice.getId();
     }
 
     @Override
@@ -77,6 +81,14 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoiceRepository.save(invoice);
     }
 
+    @Override
+    @Async("asyncExecutor")
+    public void sendInvoiceEmail(Long invoiceId) {
+        Invoice invoice = getInvoiceById(invoiceId);
+        emailService.sendInvoiceEmail(invoice);
+    }
+
+    // TODO: Refactor
     public int calculateAmount() {
         return 5000;
     }

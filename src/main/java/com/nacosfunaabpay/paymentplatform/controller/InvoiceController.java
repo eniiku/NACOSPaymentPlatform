@@ -16,7 +16,7 @@ public class InvoiceController {
 
     @PostMapping("/generate-invoice")
     public String generateInvoice(@ModelAttribute PaymentFormDTO paymentForm, Model model) {
-        String invoiceNumber = invoiceService.generateInvoice(paymentForm);
+        Long invoiceNumber = invoiceService.generateInvoice(paymentForm);
         int amount = invoiceService.calculateAmount();
         model.addAttribute("paymentForm", paymentForm);
         model.addAttribute("amount", amount);

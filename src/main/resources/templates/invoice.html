@@ -18,10 +18,11 @@
     <input type="hidden" name="firstName" th:value="${paymentForm.firstName}" />
     <input type="hidden" name="lastName" th:value="${paymentForm.lastName}" />
     <input type="hidden" name="email" th:value="${paymentForm.email}" />
-    <input type="hidden" name="matricNumber" th:value="${paymentForm.registrationNumber}" />
+    <input type="hidden" name="registrationNumber" th:value="${paymentForm.registrationNumber}" />
     <input type="hidden" name="level" th:value="${paymentForm.level}" />
     <input type="hidden" name="phoneNumber" th:value="${paymentForm.phoneNumber}" />
     <input type="hidden" name="amount" th:value="${amount}" />
+    <input type="hidden" name="invoiceNumber" th:value="${invoiceNumber}" />
     <button type="submit">Proceed to Payment</button>
 </form>
 </body>
