@@ -38,14 +38,9 @@ public class InvoiceServiceImpl implements InvoiceService {
 
         Student student;
         try {
-            student = studentService.findStudentByEmail(paymentForm.getEmail());
+            student = studentService.findStudentByRegistrationNumber(paymentForm.getRegistrationNumber());
         } catch (StudentNotFoundException e) {
-            try {
-                student = studentService.findStudentByRegistrationNumber(paymentForm.getRegistrationNumber());
-            } catch (StudentNotFoundException ex) {
-                // Create a new student if not found
-                student = studentService.createStudent(paymentForm);
-            }
+            student = studentService.createStudent(paymentForm);
         }
 
         Invoice invoice = new Invoice();

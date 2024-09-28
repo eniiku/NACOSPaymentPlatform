@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@SessionAttributes("invoiceId")
 //@RequestMapping("/invoice")
 public class InvoiceController {
 
@@ -16,11 +17,11 @@ public class InvoiceController {
 
     @PostMapping("/generate-invoice")
     public String generateInvoice(@ModelAttribute PaymentFormDTO paymentForm, Model model) {
-        Long invoiceNumber = invoiceService.generateInvoice(paymentForm);
+        Long invoiceId = invoiceService.generateInvoice(paymentForm);
         int amount = invoiceService.calculateAmount();
         model.addAttribute("paymentForm", paymentForm);
         model.addAttribute("amount", amount);
-        model.addAttribute("invoiceNumber", invoiceNumber);
+        model.addAttribute("invoiceId", invoiceId);
         return "invoice";
     }
 }
