@@ -58,7 +58,7 @@ public class StudentServiceImpl implements StudentService {
         student.setPhoneNumber(paymentForm.getPhoneNumber());
         student.setRegistrationNumber(paymentForm.getRegistrationNumber());
 
-        Program program = programService.findOrCreateProgram(paymentForm.getProgram());
+        Program program = programService.findProgram(paymentForm.getProgram());
         Level level = levelService.findLevel(paymentForm.getLevel());
         AcademicYear academicYear = academicYearService.getCurrentAcademicYear();
 
