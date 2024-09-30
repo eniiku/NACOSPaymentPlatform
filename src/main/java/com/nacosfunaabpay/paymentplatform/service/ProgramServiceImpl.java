@@ -10,10 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class ProgramServiceImpl implements ProgramService {
 
-    private static final Logger logger = LoggerFactory.getLogger(LevelServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProgramServiceImpl.class);
 
     @Autowired
     private ProgramRepository programRepository;
@@ -21,10 +23,14 @@ public class ProgramServiceImpl implements ProgramService {
     @Override
     @Transactional(readOnly = true)
     public Program findProgram(String programName) {
+
         return programRepository.findByName(programName).orElseThrow( () -> {
             logger.error("Level not found for ID: {}", programName);
             return new ProgramNotFoundException("Level not found for ID: " + programName);
         });
+    }
 
+    public List<Program> getAllPrograms() {
+        return programRepository.findAllByOrderByNameAsc();
     }
 }

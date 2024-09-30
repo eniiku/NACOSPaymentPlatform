@@ -12,20 +12,18 @@
     <input id="user-reg-number" type="text" th:field="*{registrationNumber}" placeholder="Matric/JAMB Number"/>
     <input id="user-phone-no" type="tel" th:field="*{phoneNumber}" placeholder="Phone Number"/>
 
-
     <select id="user-level" th:field="*{level}">
-        <option value="">Level</option>
-        <option value="1">100 Level</option>
-        <option value="3">200 Level</option>
-        <option value="2">200 Level (DE)</option>
-        <option value="4">300 Level</option>
-        <option value="5">400 Level</option>
+        <option value="">Select Level</option>
+        <option th:each="level : ${levels}"
+                th:value="${level.id}"
+                th:text="${level.name}">Level</option>
     </select>
 
     <select id="user-program" th:field="*{program}">
-        <option value="">Program</option>
-        <option value="CS">Computer Science</option>
-        <option value="SE">Software Engineering</option>
+        <option value="">Select Program</option>
+        <option th:each="program : ${programs}"
+                th:value="${program.name}"
+                th:text="${program.name}"></option>
     </select>
 
     <button type="submit">Proceed</button>
