@@ -33,7 +33,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional
-    public Long generateInvoice(PaymentFormDTO paymentForm) {
+    public Invoice generateInvoice(PaymentFormDTO paymentForm) {
         logger.info("Generating invoice for student: {}", paymentForm.getEmail());
 
         Student student;
@@ -55,11 +55,10 @@ public class InvoiceServiceImpl implements InvoiceService {
         Invoice savedInvoice = invoiceRepository.save(invoice);
         logger.info("Invoice generated successfully. Invoice ID: {}", savedInvoice.getId());
 
-        return savedInvoice.getId();
+        return savedInvoice;
     }
 
     @Override
-    @Transactional
     public Invoice getInvoiceById(Long invoiceId) {
         logger.debug("Fetching invoice with ID: {}", invoiceId);
         return invoiceRepository.findById(invoiceId)
@@ -81,10 +80,5 @@ public class InvoiceServiceImpl implements InvoiceService {
     public void sendInvoiceEmail(Long invoiceId) {
         Invoice invoice = getInvoiceById(invoiceId);
         emailService.sendInvoiceEmail(invoice);
-    }
-
-    // TODO: Refactor
-    public int calculateAmount() {
-        return 5000;
     }
 }

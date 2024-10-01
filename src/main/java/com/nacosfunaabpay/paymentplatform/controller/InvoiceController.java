@@ -1,6 +1,7 @@
 package com.nacosfunaabpay.paymentplatform.controller;
 
 import com.nacosfunaabpay.paymentplatform.dtos.PaymentFormDTO;
+import com.nacosfunaabpay.paymentplatform.model.Invoice;
 import com.nacosfunaabpay.paymentplatform.service.InvoiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,11 +18,11 @@ public class InvoiceController {
 
     @PostMapping("/generate-invoice")
     public String generateInvoice(@ModelAttribute PaymentFormDTO paymentForm, Model model) {
-        Long invoiceId = invoiceService.generateInvoice(paymentForm);
-        int amount = invoiceService.calculateAmount();
+        Invoice invoice = invoiceService.generateInvoice(paymentForm);
+
         model.addAttribute("paymentForm", paymentForm);
-        model.addAttribute("amount", amount);
-        model.addAttribute("invoiceId", invoiceId);
+        model.addAttribute("amount", invoice.getAmountDue());
+        model.addAttribute("invoiceId", invoice.getId());
         return "invoice";
     }
 }
