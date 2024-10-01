@@ -1,32 +1,74 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>NACOS Payment Platform</title>
-</head>
-<body>
-<form th:action="@{/generate-invoice}" th:object="${paymentForm}" method="post">
-    <input id="user-first-name" type="text" th:field="*{firstName}" placeholder="First Name"/>
-    <input id="user-last-name" type="text" th:field="*{lastName}" placeholder="Last Name"/>
-    <input id="user-email" type="email" th:field="*{email}" placeholder="Email Address"/>
-    <input id="user-reg-number" type="text" th:field="*{registrationNumber}" placeholder="Matric/JAMB Number"/>
-    <input id="user-phone-no" type="tel" th:field="*{phoneNumber}" placeholder="Phone Number"/>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>NACOS Payment Platform</title>
+        <meta name="description" content="Official payment portal for NACOS dues" />
+        <link rel="stylesheet" th:href="@{/css/home.min.css}" />
+    </head>
+    <body>
+        <main class="container">
+            <div class="container__text">
+                <h1>Hello there! Pay Your NACOS Dues Easily and Securely here</h1>
+                <p>Welcome to the official payment portal for NACOS dues. Kindly provide accurate information to ensure a successful payment.</p>
+            </div>
 
-    <select id="user-level" th:field="*{level}">
-        <option value="">Select Level</option>
-        <option th:each="level : ${levels}"
-                th:value="${level.id}"
-                th:text="${level.name}">Level</option>
-    </select>
+            <form class="container__form" th:action="@{/generate-invoice}" th:object="${paymentForm}" method="post">
+                <input
+                    id="user-first-name"
+                    type="text"
+                    th:field="*{firstName}"
+                    placeholder="First Name"
+                />
+                <input
+                    id="user-last-name"
+                    type="text"
+                    th:field="*{lastName}"
+                    placeholder="Last Name"
+                />
+                <input
+                    id="user-email"
+                    type="email"
+                    th:field="*{email}"
+                    placeholder="Email Address"
+                />
+                <input
+                    id="user-reg-number"
+                    type="text"
+                    th:field="*{registrationNumber}"
+                    placeholder="Matric/JAMB Number"
+                />
+                <input
+                    id="user-phone-no"
+                    type="tel"
+                    th:field="*{phoneNumber}"
+                    placeholder="Phone Number"
+                />
 
-    <select id="user-program" th:field="*{program}">
-        <option value="">Select Program</option>
-        <option th:each="program : ${programs}"
-                th:value="${program.name}"
-                th:text="${program.name}"></option>
-    </select>
+                <select id="user-level" th:field="*{level}">
+                    <option value="">Select Level</option>
+                    <option
+                        th:each="level : ${levels}"
+                        th:value="${level.id}"
+                        th:text="${level.name}"
+                    >
+                        Level
+                    </option>
+                </select>
 
-    <button type="submit">Proceed</button>
-</form>
-</body>
+                <select id="user-program" th:field="*{program}">
+                    <option value="">Select Program</option>
+                    <option
+                        th:each="program : ${programs}"
+                        th:value="${program.name}"
+                        th:text="${program.name}"
+                    ></option>
+                </select>
+
+                <button type="submit">Proceed</button>
+            </form>
+        </main>
+    </body>
 </html>
