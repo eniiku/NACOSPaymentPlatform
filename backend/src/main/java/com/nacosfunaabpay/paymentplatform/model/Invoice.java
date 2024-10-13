@@ -1,5 +1,6 @@
 package com.nacosfunaabpay.paymentplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nacosfunaabpay.paymentplatform.model.entity.AuditableEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -18,6 +19,7 @@ public class Invoice extends AuditableEntity {
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
+    @JsonManagedReference
     private Student student;
 
     @Column(nullable = false)

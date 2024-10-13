@@ -1,5 +1,6 @@
 package com.nacosfunaabpay.paymentplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nacosfunaabpay.paymentplatform.model.entity.AuditableEntity;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties({"program", "level", "academicYear", "payments", "invoices"})
 public class Student extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,15 +28,15 @@ public class Student extends AuditableEntity {
     @Column(nullable = false, unique = true)
     private String registrationNumber;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY)
     @JoinColumn(name = "program_id", nullable = false)
     private Program program;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY)
     @JoinColumn(name = "level_id", nullable = false)
     private Level level;
 
-    @ManyToOne
+    @ManyToOne( fetch = FetchType.LAZY)
     @JoinColumn(name = "academic_year_id", nullable = false)
     private AcademicYear academicYear;
 

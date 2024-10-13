@@ -1,5 +1,6 @@
 package com.nacosfunaabpay.paymentplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ public class Level {
     private BigDecimal duesAmount;
 
     @OneToMany(mappedBy = "level")
+    @JsonManagedReference
     private Set<Student> students;
 
     public Long getId() {

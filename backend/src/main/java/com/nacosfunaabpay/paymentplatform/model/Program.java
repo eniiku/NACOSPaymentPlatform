@@ -1,10 +1,13 @@
 package com.nacosfunaabpay.paymentplatform.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties("students")
 public class Program {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +19,7 @@ public class Program {
         private String description;
 
         @OneToMany(mappedBy = "program")
+        @JsonManagedReference
         private Set<Student> students;
 
         public Long getId() {
