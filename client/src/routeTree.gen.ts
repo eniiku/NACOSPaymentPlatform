@@ -13,18 +13,36 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as VerifyErrorImport } from './routes/verify-error'
 
 // Create Virtual Routes
 
+const VerifyLazyImport = createFileRoute('/verify')()
+const SuccessLazyImport = createFileRoute('/success')()
 const InvoiceLazyImport = createFileRoute('/invoice')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
 
+const VerifyLazyRoute = VerifyLazyImport.update({
+  path: '/verify',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/verify.lazy').then((d) => d.Route))
+
+const SuccessLazyRoute = SuccessLazyImport.update({
+  path: '/success',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/success.lazy').then((d) => d.Route))
+
 const InvoiceLazyRoute = InvoiceLazyImport.update({
   path: '/invoice',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/invoice.lazy').then((d) => d.Route))
+
+const VerifyErrorRoute = VerifyErrorImport.update({
+  path: '/verify-error',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
@@ -42,11 +60,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexLazyImport
       parentRoute: typeof rootRoute
     }
+    '/verify-error': {
+      id: '/verify-error'
+      path: '/verify-error'
+      fullPath: '/verify-error'
+      preLoaderRoute: typeof VerifyErrorImport
+      parentRoute: typeof rootRoute
+    }
     '/invoice': {
       id: '/invoice'
       path: '/invoice'
       fullPath: '/invoice'
       preLoaderRoute: typeof InvoiceLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/success': {
+      id: '/success'
+      path: '/success'
+      fullPath: '/success'
+      preLoaderRoute: typeof SuccessLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/verify': {
+      id: '/verify'
+      path: '/verify'
+      fullPath: '/verify'
+      preLoaderRoute: typeof VerifyLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -56,37 +95,52 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
+  '/verify-error': typeof VerifyErrorRoute
   '/invoice': typeof InvoiceLazyRoute
+  '/success': typeof SuccessLazyRoute
+  '/verify': typeof VerifyLazyRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
+  '/verify-error': typeof VerifyErrorRoute
   '/invoice': typeof InvoiceLazyRoute
+  '/success': typeof SuccessLazyRoute
+  '/verify': typeof VerifyLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
+  '/verify-error': typeof VerifyErrorRoute
   '/invoice': typeof InvoiceLazyRoute
+  '/success': typeof SuccessLazyRoute
+  '/verify': typeof VerifyLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/invoice'
+  fullPaths: '/' | '/verify-error' | '/invoice' | '/success' | '/verify'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/invoice'
-  id: '__root__' | '/' | '/invoice'
+  to: '/' | '/verify-error' | '/invoice' | '/success' | '/verify'
+  id: '__root__' | '/' | '/verify-error' | '/invoice' | '/success' | '/verify'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
+  VerifyErrorRoute: typeof VerifyErrorRoute
   InvoiceLazyRoute: typeof InvoiceLazyRoute
+  SuccessLazyRoute: typeof SuccessLazyRoute
+  VerifyLazyRoute: typeof VerifyLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
+  VerifyErrorRoute: VerifyErrorRoute,
   InvoiceLazyRoute: InvoiceLazyRoute,
+  SuccessLazyRoute: SuccessLazyRoute,
+  VerifyLazyRoute: VerifyLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -102,14 +156,26 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/invoice"
+        "/verify-error",
+        "/invoice",
+        "/success",
+        "/verify"
       ]
     },
     "/": {
       "filePath": "index.lazy.tsx"
     },
+    "/verify-error": {
+      "filePath": "verify-error.tsx"
+    },
     "/invoice": {
       "filePath": "invoice.lazy.tsx"
+    },
+    "/success": {
+      "filePath": "success.lazy.tsx"
+    },
+    "/verify": {
+      "filePath": "verify.lazy.tsx"
     }
   }
 }
