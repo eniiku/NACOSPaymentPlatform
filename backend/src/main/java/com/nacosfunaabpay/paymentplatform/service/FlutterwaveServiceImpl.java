@@ -24,15 +24,15 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
     private final OkHttpClient client = new OkHttpClient();
     private final Gson gson = new Gson();
 
+    private final String REDIRECT_URL = "http://localhost:5173/verify";
+
     public String initializePayment(Invoice invoice) throws IOException {
 
         logger.info("Initializing payment for invoice: {}", invoice.getId());
         String url = "https://api.flutterwave.com/v3/payments";
 
         // Dynamically generate the redirect URL
-        String redirectUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/payment/verify")
-                .toUriString();
+        String redirectUrl = REDIRECT_URL;
 
         Map<String, Object> requestMap = new HashMap<>();
 //        TODO: UPDATE INVOICE TABLE TO STORE INVOICE-NO
