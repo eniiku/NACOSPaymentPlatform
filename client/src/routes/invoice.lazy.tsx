@@ -1,6 +1,9 @@
 import { z } from "zod"
 import { useForm } from "react-hook-form"
+import axios, { HttpStatusCode } from "axios"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { createLazyFileRoute } from "@tanstack/react-router"
+import { ChevronDownIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -20,14 +23,47 @@ import {
     SelectContent,
     SelectItem,
 } from "@/components/ui/select"
-import { ChevronDownIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
+import useInvoiceStore from "@/lib/store/useInvoiceStore"
+import { formatDate } from "@/lib/utils"
 
 export const Route = createLazyFileRoute("/invoice")({
     component: InvoicePage,
 })
 
 function InvoicePage() {
-    const form = useForm<z.infer<typeof userFormSchema>>()
+    const { invoice } = useInvoiceStore()
+
+    const firstName = invoice?.student.name.split(" ")[0] as string
+    const lastName = invoice?.student.name.split(" ")[1] as string
+    const email = invoice?.student.email as string
+    const phoneNumber = invoice?.student.phoneNumber as string
+    const registrationNumber = invoice?.student.registrationNumber as string
+
+    const form = useForm<z.infer<typeof userFormSchema>>({
+        resolver: zodResolver(userFormSchema),
+        values: {
+            firstName,
+            lastName,
+            emailAddress: email,
+            registrationNo: registrationNumber,
+            level: "4",
+            phoneNo: phoneNumber,
+        },
+    })
+
+    function onSubmit() {
+        // TODO: REFACTOR
+        axios
+            .post(`http://localhost:8443/api/v1/payments/initialize?invoice_id=${invoice?.id}`)
+            .then((res) => {
+                console.log(res)
+                const paymentGatewayUrl = res.data?.paymentUrl
+                if (res.status === HttpStatusCode.Ok) window.location.href = paymentGatewayUrl
+            })
+            .catch((err) => {
+                console.log("[ERROR]: ", err)
+            })
+    }
 
     return (
         <>
@@ -43,7 +79,7 @@ function InvoicePage() {
                         </p>
 
                         <h3 className="font-bold text-xl text-black/80 md:lg-text-2xl lg:text-4xl">
-                            NGN 3,000
+                            NGN {invoice?.amountDue}
                         </h3>
                     </div>
 
@@ -56,13 +92,15 @@ function InvoicePage() {
                             Invoice Number
                         </p>
 
-                        <h5 className="font-semibold text-black/80">#3269625</h5>
+                        <h5 className="font-semibold text-black/80">#{invoice?.id}</h5>
                     </div>
 
                     <div className="p-1 space-y-2">
                         <p className="font-medium text-sm text-black/50 lg:text-base">Date</p>
 
-                        <h3 className="font-semibold text-black/80">13-09-2024</h3>
+                        <h3 className="font-semibold text-black/80">
+                            {formatDate(invoice?.createdAt as string)}
+                        </h3>
                     </div>
                 </div>
 
@@ -84,15 +122,35 @@ function InvoicePage() {
                         </div>
 
                         <ul className="space-y-3">
-                            {[...Array(4)].map((item) => (
-                                <li key={item} className="flex items-center gap-3">
-                                    <img src="/verified.svg" alt="" width={24} height={24} />
+                            <li className="flex items-center gap-3">
+                                <img src="/verified.svg" alt="" width={24} height={24} />
 
-                                    <p className="font-medium text-black/90 lg:text-lg">
-                                        Danny Phantom
-                                    </p>
-                                </li>
-                            ))}
+                                <p className="font-medium text-black/90 lg:text-lg">
+                                    {invoice?.student.name}
+                                </p>
+                            </li>
+
+                            <li className="flex items-center gap-3">
+                                <img src="/verified.svg" alt="" width={24} height={24} />
+
+                                <p className="font-medium text-black/90 lg:text-lg">
+                                    Computer Science
+                                </p>
+                            </li>
+
+                            <li className="flex items-center gap-3">
+                                <img src="/verified.svg" alt="" width={24} height={24} />
+
+                                <p className="font-medium text-black/90 lg:text-lg">300L</p>
+                            </li>
+
+                            <li className="flex items-center gap-3">
+                                <img src="/verified.svg" alt="" width={24} height={24} />
+
+                                <p className="font-medium text-black/90 lg:text-lg">
+                                    {invoice?.student.email}
+                                </p>
+                            </li>
                         </ul>
                     </div>
 
@@ -110,15 +168,33 @@ function InvoicePage() {
                         </div>
 
                         <ul className="space-y-3">
-                            {[...Array(4)].map((item) => (
-                                <li key={item} className="flex items-center gap-3">
-                                    <img src="/verified.svg" alt="" width={24} height={24} />
+                            <li className="flex items-center gap-3">
+                                <img src="/verified.svg" alt="" width={24} height={24} />
 
-                                    <p className="font-medium text-black/90 lg:text-lg">
-                                        Danny Phantom
-                                    </p>
-                                </li>
-                            ))}
+                                <p className="font-medium text-black/90 lg:text-lg">NACOS PAY</p>
+                            </li>
+
+                            <li className="flex items-center gap-3">
+                                <img src="/verified.svg" alt="" width={24} height={24} />
+
+                                <p className="font-medium text-black/90 lg:text-lg text-blue-600 underline underline-offset-4">
+                                    https://nacosfunaabpay.com.ng
+                                </p>
+                            </li>
+
+                            <li className="flex items-center gap-3">
+                                <img src="/verified.svg" alt="" width={24} height={24} />
+
+                                <p className="font-medium text-black/90 lg:text-lg">09155104851</p>
+                            </li>
+
+                            <li className="flex items-center gap-3">
+                                <img src="/verified.svg" alt="" width={24} height={24} />
+
+                                <p className="font-medium text-black/90 lg:text-lg">
+                                    support@nacosfunaabpay.com.ng
+                                </p>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -163,7 +239,10 @@ function InvoicePage() {
 
                 {/* Action Buttons */}
                 <div className="space-y-3 lg:mt-16 flex gap-3 items-center md:space-y-0">
-                    <Button className="w-full h-auto font-bold text-sm py-4 bg-green-700 hover:bg-green-800">
+                    <Button
+                        onClick={onSubmit}
+                        className="w-full h-auto font-bold text-sm py-4 bg-green-700 hover:bg-green-800"
+                    >
                         MAKE PAYMENT
                     </Button>
                     <Button
@@ -207,18 +286,22 @@ function InvoicePage() {
                 </div>
 
                 <Form {...form}>
-                    <form className="w-full bg-white border-4 border-white/15 p-3 max-w-[520px] rounded-md space-y-6">
+                    <form
+                        onSubmit={form.handleSubmit(onSubmit)}
+                        className="w-full bg-white border-4 border-white/15 p-3 max-w-[520px] rounded-md space-y-6"
+                    >
                         <div className="space-y-3 md:space-y-4">
                             <div className="md:flex gap-4">
                                 <FormField
                                     control={form.control}
                                     name="firstName"
-                                    render={() => (
+                                    render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
                                                 <Input
                                                     placeholder="First Name"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                    {...field}
                                                 />
                                             </FormControl>
                                             <FormDescription />
@@ -229,12 +312,13 @@ function InvoicePage() {
                                 <FormField
                                     control={form.control}
                                     name="lastName"
-                                    render={() => (
+                                    render={({ field }) => (
                                         <FormItem>
                                             <FormControl>
                                                 <Input
                                                     placeholder="Last Name"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                    {...field}
                                                 />
                                             </FormControl>
                                             <FormDescription />
@@ -247,13 +331,14 @@ function InvoicePage() {
                             <FormField
                                 control={form.control}
                                 name="emailAddress"
-                                render={() => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
                                             <Input
                                                 type="email"
                                                 placeholder="Email Address"
                                                 className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormDescription />
@@ -265,12 +350,13 @@ function InvoicePage() {
                             <FormField
                                 control={form.control}
                                 name="registrationNo"
-                                render={() => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
                                             <Input
                                                 placeholder="Matric / JAMB Number"
                                                 className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormDescription />
@@ -282,40 +368,44 @@ function InvoicePage() {
                             <FormField
                                 control={form.control}
                                 name="level"
-                                render={() => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
-                                            <Select>
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                defaultValue={field.value}
+                                            >
                                                 <SelectTrigger className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium">
                                                     <SelectValue placeholder="Level" />
                                                 </SelectTrigger>
                                                 <SelectContent>
                                                     <SelectItem
-                                                        value="100"
+                                                        value="1"
                                                         className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                     >
                                                         100 LEVEL
                                                     </SelectItem>
                                                     <SelectItem
-                                                        value="200"
+                                                        value="2"
                                                         className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                     >
                                                         200 LEVEL
                                                     </SelectItem>
                                                     <SelectItem
-                                                        value="DE"
+                                                        // value="DE"
+                                                        value="3"
                                                         className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                     >
                                                         DIRECT ENTRY
                                                     </SelectItem>
                                                     <SelectItem
-                                                        value="300"
+                                                        value="4"
                                                         className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                     >
                                                         300 LEVEL
                                                     </SelectItem>
                                                     <SelectItem
-                                                        value="400"
+                                                        value="5"
                                                         className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                     >
                                                         400 LEVEL
@@ -332,12 +422,13 @@ function InvoicePage() {
                             <FormField
                                 control={form.control}
                                 name="phoneNo"
-                                render={() => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
                                             <Input
                                                 placeholder="Phone Number"
                                                 className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormDescription />
@@ -347,7 +438,10 @@ function InvoicePage() {
                             />
                         </div>
 
-                        <Button className="h-auto w-full py-3 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-emerald-700">
+                        <Button
+                            type="submit"
+                            className="h-auto w-full py-3 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-emerald-700"
+                        >
                             PROCEED{" "}
                             <span>
                                 <img src="/arrow-right.svg" alt="" width={20} height={20} />
