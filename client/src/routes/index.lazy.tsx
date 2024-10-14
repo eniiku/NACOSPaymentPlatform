@@ -1,6 +1,8 @@
 import { z } from "zod"
+import axios, { HttpStatusCode } from "axios"
 import { useForm } from "react-hook-form"
-import { createLazyFileRoute } from "@tanstack/react-router"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { createLazyFileRoute, useNavigate } from "@tanstack/react-router"
 
 import {
     Form,
@@ -20,13 +22,49 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
+import useInvoiceStore from "@/lib/store/useInvoiceStore"
 
 export const Route = createLazyFileRoute("/")({
     component: Index,
 })
 
 function Index() {
-    const form = useForm<z.infer<typeof userFormSchema>>()
+    const navigate = useNavigate({ from: "/" })
+    const { setInvoice } = useInvoiceStore()
+
+    const form = useForm<z.infer<typeof userFormSchema>>({
+        resolver: zodResolver(userFormSchema),
+        defaultValues: {
+            firstName: "",
+            lastName: "",
+            emailAddress: "",
+            registrationNo: "",
+            level: undefined,
+            phoneNo: "",
+        },
+    })
+
+    function onSubmit(values: z.infer<typeof userFormSchema>) {
+        // TODO: REFACTOR
+        axios
+            .post("http://localhost:8443/api/v1/invoices", {
+                program: "Computer Science",
+                email: values.emailAddress,
+                phoneNumber: values.phoneNo,
+                registrationNumber: values.registrationNo,
+                ...values,
+            })
+            .then((res) => {
+                const invoiceId = res.data?.id
+                if (res.status === HttpStatusCode.Created) {
+                    setInvoice(res.data)
+                    navigate({ to: "/invoice", params: { invoiceId } })
+                }
+            })
+            .catch((err) => {
+                console.log("[ERROR]: ", err)
+            })
+    }
 
     return (
         <main className="md:flex px-4 pt-11 pb-6 justify-evenly md:px-36 md:pt-24">
@@ -61,18 +99,22 @@ function Index() {
             </div>
 
             <Form {...form}>
-                <form className="w-full bg-white border-4 border-white/15 p-3 max-w-[520px] rounded-md space-y-6">
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="w-full bg-white border-4 border-white/15 p-3 max-w-[520px] rounded-md space-y-6"
+                >
                     <div className="space-y-3 md:space-y-4">
                         <div className="md:flex gap-4">
                             <FormField
                                 control={form.control}
                                 name="firstName"
-                                render={() => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
                                             <Input
                                                 placeholder="First Name"
                                                 className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormDescription />
@@ -83,12 +125,13 @@ function Index() {
                             <FormField
                                 control={form.control}
                                 name="lastName"
-                                render={() => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
                                             <Input
                                                 placeholder="Last Name"
                                                 className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                {...field}
                                             />
                                         </FormControl>
                                         <FormDescription />
@@ -101,13 +144,14 @@ function Index() {
                         <FormField
                             control={form.control}
                             name="emailAddress"
-                            render={() => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
                                         <Input
                                             type="email"
                                             placeholder="Email Address"
                                             className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                            {...field}
                                         />
                                     </FormControl>
                                     <FormDescription />
@@ -119,12 +163,13 @@ function Index() {
                         <FormField
                             control={form.control}
                             name="registrationNo"
-                            render={() => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
                                         <Input
                                             placeholder="Matric / JAMB Number"
                                             className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                            {...field}
                                         />
                                     </FormControl>
                                     <FormDescription />
@@ -136,40 +181,44 @@ function Index() {
                         <FormField
                             control={form.control}
                             name="level"
-                            render={() => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Select>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
                                             <SelectTrigger className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium">
                                                 <SelectValue placeholder="Level" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem
-                                                    value="100"
+                                                    value="1"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                 >
                                                     100 LEVEL
                                                 </SelectItem>
                                                 <SelectItem
-                                                    value="200"
+                                                    value="2"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                 >
                                                     200 LEVEL
                                                 </SelectItem>
                                                 <SelectItem
-                                                    value="DE"
+                                                    // value="DE"
+                                                    value="3"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                 >
                                                     DIRECT ENTRY
                                                 </SelectItem>
                                                 <SelectItem
-                                                    value="300"
+                                                    value="4"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                 >
                                                     300 LEVEL
                                                 </SelectItem>
                                                 <SelectItem
-                                                    value="400"
+                                                    value="5"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                 >
                                                     400 LEVEL
@@ -186,12 +235,13 @@ function Index() {
                         <FormField
                             control={form.control}
                             name="phoneNo"
-                            render={() => (
+                            render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
                                         <Input
                                             placeholder="Phone Number"
                                             className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                            {...field}
                                         />
                                     </FormControl>
                                     <FormDescription />
@@ -201,7 +251,10 @@ function Index() {
                         />
                     </div>
 
-                    <Button className="h-auto w-full py-3 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-emerald-700">
+                    <Button
+                        type="submit"
+                        className="h-auto w-full py-3 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-emerald-700"
+                    >
                         PROCEED{" "}
                         <span>
                             <img src="/arrow-right.svg" alt="" width={20} height={20} />
