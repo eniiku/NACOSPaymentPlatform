@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+    backend:
+        build: ./backend
+        ports:
+            - "8443:8443"
+        environment:
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/nacos_funaab
+            - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+            - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+            - FLUTTERWAVE_SECRET=${FLUTTERWAVE_SECRET}
+            - MAIL_PASSWORD=${MAIL_PASSWORD}
+            - MAIL_USERNAME=${MAIL_USERNAME}
+            - DB_PASSWORD=${DB_PASSWORD}
+            - DB_USERNAME=${DB_USERNAME}
+        depends_on:
+            - db
+        networks:
+            - app-network
+
+    frontend:
+        build: ./client
+        ports:
+            - "5173:80"
+        environment:
+            - VITE_API_BASE_URL=http://backend:8443
+        depends_on:
+            - backend
+        networks:
+            - app-network
+
+    db:
+        image: "postgres:latest"
+        environment:
+            - POSTGRES_DB=nacos_funaab
+            - POSTGRES_USER=${DB_USERNAME}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+        ports:
+            - "5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        networks:
+            - app-network
+
+volumes:
+    postgres_data:
+
+networks:
+    app-network:
+        driver: bridge
