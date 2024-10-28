@@ -11,7 +11,7 @@
 	<groupId>com.nacosfunaabpay</groupId>
 	<artifactId>payment-platform</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>payment-platform</name>
 	<description>NACOS dues payment platform for the Nigerian Association of Computer Science Students (NACOS), FUNNAB chapter</description>
 	<url/>

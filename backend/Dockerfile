@@ -1,5 +1,4 @@
-
-FROM tomcat:10-jdk17-openjdk-slim
-COPY target/*.war /usr/local/tomcat/webapps/ROOT.war
-EXPOSE 8080
-CMD ["catalina.sh", "run"]
+FROM openjdk:17-jdk-slim
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
