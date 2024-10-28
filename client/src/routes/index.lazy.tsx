@@ -47,7 +47,8 @@ function Index() {
     function onSubmit(values: z.infer<typeof userFormSchema>) {
         // TODO: REFACTOR
         axios
-            .post("http://localhost:8443/api/v1/invoices", {
+            // .post("http://localhost:8443/api/v1/invoices", {
+            .post("http://18.175.120.168:8443/api/v1/invoices", {
                 program: "Computer Science",
                 email: values.emailAddress,
                 phoneNumber: values.phoneNo,

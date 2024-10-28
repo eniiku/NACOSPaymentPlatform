@@ -54,7 +54,8 @@ function InvoicePage() {
     function onSubmit() {
         // TODO: REFACTOR
         axios
-            .post(`http://localhost:8443/api/v1/payments/initialize?invoice_id=${invoice?.id}`)
+            // .post(`http://localhost:8443/api/v1/payments/initialize?invoice_id=${invoice?.id}`)
+            .post(`http://18.175.120.168:8443/api/v1/payments/initialize?invoice_id=${invoice?.id}`)
             .then((res) => {
                 console.log(res)
                 const paymentGatewayUrl = res.data?.paymentUrl

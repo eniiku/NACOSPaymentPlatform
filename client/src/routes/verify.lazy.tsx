@@ -27,7 +27,8 @@ function VerifyPage() {
         try {
             // Replace with your actual backend API endpoint
             const res = await axios.get(
-                `http://localhost:8443/api/v1/payments/verify?transaction_id=${transactionId}&invoice_id=${txRef}`
+                // `http://localhost:8443/api/v1/payments/verify?transaction_id=${transactionId}&invoice_id=${txRef}`
+                `http://18.175.120.168:8443/api/v1/payments/verify?transaction_id=${transactionId}&invoice_id=${txRef}`
             )
 
             if (res.status === HttpStatusCode.Ok) {
