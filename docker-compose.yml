@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
     backend:
         build: ./backend
@@ -16,8 +14,6 @@ services:
             - DB_USERNAME=${DB_USERNAME}
         depends_on:
             - db
-        networks:
-            - app-network
 
     frontend:
         build: ./client
@@ -27,8 +23,6 @@ services:
             - VITE_API_BASE_URL=http://backend:8443
         depends_on:
             - backend
-        networks:
-            - app-network
 
     db:
         image: "postgres:latest"
@@ -40,12 +34,6 @@ services:
             - "5432"
         volumes:
             - postgres_data:/var/lib/postgresql/data
-        networks:
-            - app-network
 
 volumes:
     postgres_data:
-
-networks:
-    app-network:
-        driver: bridge
