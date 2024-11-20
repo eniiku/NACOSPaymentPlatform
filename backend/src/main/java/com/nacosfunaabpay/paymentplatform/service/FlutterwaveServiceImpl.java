@@ -35,9 +35,7 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
         String redirectUrl = REDIRECT_URL;
 
         Map<String, Object> requestMap = new HashMap<>();
-//        TODO: UPDATE INVOICE TABLE TO STORE INVOICE-NO
-//        requestMap.put("tx_ref", invoice.getInoviceNumber());
-        requestMap.put("tx_ref", invoice.getId());
+        requestMap.put("tx_ref", invoice.getInvoiceNumber());
         requestMap.put("amount", invoice.getAmountDue());
         requestMap.put("currency", "NGN");
         requestMap.put("redirect_url", redirectUrl);

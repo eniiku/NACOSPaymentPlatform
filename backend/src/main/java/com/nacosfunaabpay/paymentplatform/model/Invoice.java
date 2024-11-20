@@ -54,6 +54,14 @@ public class Invoice extends AuditableEntity {
         this.id = id;
     }
 
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
+    }
+
     public Student getStudent() {
         return student;
     }

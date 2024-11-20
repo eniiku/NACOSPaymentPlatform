@@ -22,6 +22,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     private static final Logger logger = LoggerFactory.getLogger(InvoiceServiceImpl.class);
 
+    private final NumberGeneratorService numberGenerator;
+
     @Autowired
     private InvoiceRepository invoiceRepository;
 
@@ -30,6 +32,10 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Autowired
     private EmailService emailService;
+
+    public InvoiceServiceImpl(NumberGeneratorService numberGenerator) {
+        this.numberGenerator = numberGenerator;
+    }
 
     @Override
     @Transactional
@@ -44,6 +50,7 @@ public class InvoiceServiceImpl implements InvoiceService {
         }
 
         Invoice invoice = new Invoice();
+        invoice.setInvoiceNumber(numberGenerator.generateInvoiceNumber());
         invoice.setStudent(student);
         invoice.setAmountDue(student.getLevel().getDuesAmount());
         invoice.setInvoiceDate(LocalDateTime.now());
@@ -59,17 +66,17 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public Invoice getInvoiceById(Long invoiceId) {
-        logger.debug("Fetching invoice with ID: {}", invoiceId);
-        return invoiceRepository.findById(invoiceId)
-                .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found with ID: " + invoiceId));
+    public Invoice getInvoiceByInvoiceNumber(String invoiceNo) {
+        logger.debug("Fetching invoice with ID: {}", invoiceNo);
+        return invoiceRepository.findByInvoiceNumber(invoiceNo)
+                .orElseThrow(() -> new InvoiceNotFoundException("Invoice not found with ID: " + invoiceNo));
     }
 
     @Override
     @Transactional
-    public void updateInvoiceStatus(Long invoiceId, InvoiceStatus status) {
-        logger.info("Updating invoice status. Invoice ID: {}, New status: {}", invoiceId, status);
-        Invoice invoice = getInvoiceById(invoiceId);
+    public void updateInvoiceStatus(String invoiceNo, InvoiceStatus status) {
+        logger.info("Updating invoice status. Invoice ID: {}, New status: {}", invoiceNo, status);
+        Invoice invoice = getInvoiceByInvoiceNumber(invoiceNo);
         invoice.setInvoiceStatus(status.getStatus());
         invoice.setUpdatedAt(LocalDateTime.now());
         invoiceRepository.save(invoice);
@@ -77,8 +84,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Async("asyncExecutor")
-    public void sendInvoiceEmail(Long invoiceId) {
-        Invoice invoice = getInvoiceById(invoiceId);
+    public void sendInvoiceEmail(String invoiceNo) {
+        Invoice invoice = getInvoiceByInvoiceNumber(invoiceNo);
         emailService.sendInvoiceEmail(invoice);
     }
 }

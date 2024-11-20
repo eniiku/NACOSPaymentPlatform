@@ -41,35 +41,35 @@ public class PaymentController {
 
     @PostMapping("/initialize")
     public ResponseEntity<PaymentResponseDTO> initializePayment(
-            @RequestParam("invoice_id") Long invoiceId
+            @RequestParam("invoice_id") String invoiceNo
     ) {
 
         try {
-            Invoice invoice = invoiceService.getInvoiceById(invoiceId);
-            invoiceService.sendInvoiceEmail(invoice.getId()); // Send invoice to user's email asynchronously
+            Invoice invoice = invoiceService.getInvoiceByInvoiceNumber(invoiceNo);
+            invoiceService.sendInvoiceEmail(invoiceNo); // Send invoice to user's email asynchronously
             String paymentGatewayUrl = flutterwaveService.initializePayment(invoice);
 
             PaymentResponseDTO response = new PaymentResponseDTO(paymentGatewayUrl);
             return ResponseEntity.ok(response);
         } catch (IOException e) {
-            logger.error("Error initializing payment for invoice: {}", invoiceId, e);
+            logger.error("Error initializing payment for invoice: {}", invoiceNo, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/verify")
     public ResponseEntity<PaymentResponseDTO> verifyPayment(@RequestParam("transaction_id") String transactionId,
-                                                            @RequestParam("invoice_id") Long invoiceId) {
+                                                            @RequestParam("invoice_id") String invoiceNo) {
 
         logger.info("Verifying payment for transaction: {}, invoiceId: {}", transactionId,
-                invoiceId);
+                invoiceNo);
         try {
             boolean isSuccessful = flutterwaveService.verifyPayment(transactionId);
 
             if (isSuccessful) {
-                logger.info("Payment successful for invoice: {}", invoiceId);
-                Invoice invoice = invoiceService.getInvoiceById(invoiceId);
-                invoiceService.updateInvoiceStatus(invoiceId, InvoiceStatus.PAID);
+                logger.info("Payment successful for invoice: {}", invoiceNo);
+                Invoice invoice = invoiceService.getInvoiceByInvoiceNumber(invoiceNo);
+                invoiceService.updateInvoiceStatus(invoiceNo, InvoiceStatus.PAID);
 
                 // Create payment record
                 Payment payment = paymentService.createPaymentRecord(invoice, transactionId, "Flutterwave");
@@ -81,16 +81,16 @@ public class PaymentController {
                 PaymentResponseDTO response = new PaymentResponseDTO("Payment successful", receipt.getId());
                 return ResponseEntity.ok(response);
             } else {
-                logger.warn("Payment failed for invoice: {}", invoiceId);
+                logger.warn("Payment failed for invoice: {}", invoiceNo);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(new PaymentResponseDTO("Payment failed", null));
             }
         } catch (IOException e) {
-            logger.error("Error verifying payment for invoice: {}", invoiceId, e);
+            logger.error("Error verifying payment for invoice: {}", invoiceNo, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new PaymentResponseDTO("Error verifying payment", null));
         } catch (Exception e) {
-            logger.error("Unexpected error during payment verification for invoice: {}", invoiceId, e);
+            logger.error("Unexpected error during payment verification for invoice: {}", invoiceNo, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new PaymentResponseDTO("Unexpected error occurred", null));
         }
