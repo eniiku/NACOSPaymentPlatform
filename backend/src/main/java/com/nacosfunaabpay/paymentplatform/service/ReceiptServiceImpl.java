@@ -13,11 +13,17 @@ import java.time.LocalDateTime;
 @Service
 public class ReceiptServiceImpl implements ReceiptService {
 
+    private final NumberGeneratorService numberGenerator;
+
     @Autowired
     private ReceiptRepository receiptRepository;
 
     @Autowired
     private EmailService emailService;
+
+    public ReceiptServiceImpl(NumberGeneratorService numberGenerator) {
+        this.numberGenerator = numberGenerator;
+    }
 
     @Override
     @Transactional
@@ -25,7 +31,7 @@ public class ReceiptServiceImpl implements ReceiptService {
         Receipt receipt = new Receipt();
         receipt.setPayment(payment);
         receipt.setReceiptDate(LocalDateTime.now());
-        receipt.setReceiptNumber("REC-" + System.currentTimeMillis());
+        receipt.setReceiptNumber(numberGenerator.generateReceiptNumber());
         return receiptRepository.save(receipt);
     }
 
