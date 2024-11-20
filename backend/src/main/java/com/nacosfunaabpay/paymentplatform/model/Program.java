@@ -14,6 +14,9 @@ public class Program {
         private Long id;
 
         @Column(nullable = false, unique = true)
+        private String key;
+
+        @Column(nullable = false, unique = true)
         private String name;
 
         private String description;

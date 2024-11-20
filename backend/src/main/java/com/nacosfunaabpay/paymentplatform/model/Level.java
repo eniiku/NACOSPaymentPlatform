@@ -13,6 +13,9 @@ public class Level {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    private String key;
+
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Column(nullable = false)
@@ -28,6 +31,14 @@ public class Level {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public String getName() {

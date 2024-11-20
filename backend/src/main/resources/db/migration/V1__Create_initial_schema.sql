@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS program
 (
     id          BIGSERIAL PRIMARY KEY,
+    key         VARCHAR(50) UNIQUE NOT NULL,
     name        VARCHAR(100) UNIQUE NOT NULL,
     description TEXT
 );
@@ -8,6 +9,7 @@ CREATE TABLE IF NOT EXISTS program
 CREATE TABLE IF NOT EXISTS level
 (
     id          BIGSERIAL PRIMARY KEY,
+    key         VARCHAR(50) UNIQUE NOT NULL,
     name        VARCHAR(50) UNIQUE NOT NULL,
     dues_amount DECIMAL(10, 2)     NOT NULL
 );
@@ -40,6 +42,7 @@ CREATE TABLE IF NOT EXISTS student
 CREATE TABLE IF NOT EXISTS invoice
 (
     id             BIGSERIAL PRIMARY KEY,
+    invoice_number VARCHAR(50) UNIQUE  NOT NULL,
     student_id     BIGINT         NOT NULL REFERENCES student (id),
     amount_due     DECIMAL(10, 2) NOT NULL,
     invoice_date   TIMESTAMP      NOT NULL,

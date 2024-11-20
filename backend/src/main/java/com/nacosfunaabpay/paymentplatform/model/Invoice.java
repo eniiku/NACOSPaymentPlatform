@@ -17,6 +17,9 @@ public class Invoice extends AuditableEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String invoiceNumber;
+
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
     @JsonManagedReference
