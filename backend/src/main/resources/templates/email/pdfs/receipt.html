@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title th:text="${title}" />
+    <style type="text/css">
+        html {
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            width: 565px;
+            height: 774px;
+        }
+
+        body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+            margin: 0;
+            padding: 0;
+            font-weight: normal;
+        }
+
+        ol, ul {
+            list-style: none;
+        }
+
+        body {
+            height: 774px;
+            padding: 24px 32px;
+            border-top: 8px solid #138C01;
+            border-bottom: 8px solid #138C01;
+        }
+
+        /* Header Styles */
+        .page__header {
+            width: 100%;
+            margin-bottom: 32px;
+        }
+
+        .header-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .header-logo {
+            width: 48px;
+            height: 48px;
+        }
+
+        .header-title {
+            display: inline-block;
+            color: #138C01;
+            font-size: 14px;
+            line-height: 18px;
+            letter-spacing: -0.32px;
+            font-weight: bold;
+            max-width: 212px;
+            padding-left: 8px;
+        }
+
+        .header-contact {
+            text-align: right;
+            font-size: 10px;
+            line-height: 14px;
+            color: #5E6470;
+        }
+
+        /* Main Content Styles */
+        .main-section {
+            margin-top: 32px;
+        }
+
+        .customer-info {
+            width: 100%;
+            margin-bottom: 64px;
+        }
+
+        .customer-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1A1C21;
+            margin-bottom: 6px;
+        }
+
+        .customer-details {
+            font-size: 10px;
+            line-height: 14px;
+            color: #5E6470;
+        }
+
+        .receipt-header {
+            font-size: 20px;
+            font-weight: bold;
+            color: #138C01;
+            text-align: right;
+        }
+
+        .receipt-number {
+            font-size: 10px;
+            color: #5E6470;
+            text-align: right;
+        }
+
+        /* Payment Details Table */
+        .payment-table {
+            width: 100%;
+            border: 1px solid #D7DAE0;
+            border-collapse: collapse;
+            margin-top: 32px;
+        }
+
+        .payment-table th, .payment-table td {
+            padding: 12px;
+            border-bottom: 1px solid #D7DAE0;
+        }
+
+        .payment-table th {
+            font-size: 10px;
+            color: #5E6470;
+            font-weight: normal;
+            text-align: left;
+        }
+
+        .payment-table td {
+            font-size: 10px;
+            color: #1A1C21;
+        }
+
+        .payment-table .amount {
+            text-align: right;
+        }
+
+        .total-row td {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Footer Styles */
+        .footer-section {
+            margin-top: 64px;
+            text-align: right;
+        }
+
+        .stamp-line {
+            width: 200px;
+            border-top: 1px solid #000000;
+            margin-left: auto;
+            margin-bottom: 8px;
+        }
+
+        .stamp-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1A1C21;
+        }
+
+        .print-date {
+            font-size: 10px;
+            color: #5E6470;
+            margin-top: 32px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="page">
+<div class="page__header">
+    <table class="header-table">
+        <tr>
+            <td style="width: 60%; display: flex; align-items: center;">
+                <img src="assets/logo.svg" th:src="@{assets/logo.svg}" width="48" height="48" alt="" class="header-logo"/>
+
+                <span class="header-title">Nigerian Association Of Computing Students, FUNAAB</span>
+            </td>
+            <td style="width: 40%;" class="header-contact">
+                <div>https://nacosfunaabpay.com.ng</div>
+                <div>support@nacosfunaabpay.com.ng</div>
+                <div>09155104851</div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div class="main-section">
+    <table class="customer-info">
+        <tr>
+            <td style="width: 60%;">
+                <div class="customer-name">Danny Phantom Hemsworth Jr.</div>
+                <div class="customer-details">
+                    <div>Matric No: 20223902</div>
+                    <div>Department: Computer Science (300L)</div>
+                    <div>Email Address: dannyphantom09@gmail.com</div>
+                    <div>Phone Number: 07014019002</div>
+                </div>
+            </td>
+            <td style="width: 40%;" align="right">
+                <div class="receipt-header">NACOS RECEIPT</div>
+                <div class="receipt-number">Receipt No: 904K0L0POG</div>
+            </td>
+        </tr>
+    </table>
+
+    <table class="payment-table">
+        <tr>
+            <th>PAYMENT DESCRIPTION</th>
+            <td align="right">AMOUNT</td>
+        </tr>
+        <tr>
+            <td>Payment for <strong>2024/2025 NACOS Dues</strong></td>
+            <td class="amount">NGN3,000.00</td>
+        </tr>
+        <tr>
+            <td><strong>Subtotal</strong></td>
+            <td class="amount"><strong>NGN3,000.00</strong></td>
+        </tr>
+        <tr class="total-row">
+            <td><strong>TOTAL</strong></td>
+            <td class="amount"><strong>NGN3,000.00</strong></td>
+        </tr>
+    </table>
+</div>
+
+<div class="footer-section">
+    <div class="stamp-line"></div>
+    <div class="stamp-text">Fin. Sec. Stamp</div>
+    <div class="print-date">Printed: 12-02-2024, 12:09 AM</div>
+</div>
+</body>
+</html>
