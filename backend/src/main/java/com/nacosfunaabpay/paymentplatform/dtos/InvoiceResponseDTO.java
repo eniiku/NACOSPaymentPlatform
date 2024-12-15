@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 
 public class InvoiceResponseDTO {
     private Long id;
-    private Student student;
-    private Level level;
+    private StudentDTO student;
     private BigDecimal amountDue;
     private LocalDateTime invoiceDate;
+    public String invoiceNumber;
     private String invoiceStatus;
     private LocalDate dueDate;
     private LocalDateTime createdAt;
@@ -26,20 +26,12 @@ public class InvoiceResponseDTO {
         this.id = id;
     }
 
-    public Student getStudent() {
+    public StudentDTO getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(StudentDTO student) {
         this.student = student;
-    }
-
-    public Level getLevel() {
-        return level;
-    }
-
-    public void setLevel(Level level) {
-        this.level = level;
     }
 
     public BigDecimal getAmountDue() {
@@ -48,6 +40,14 @@ public class InvoiceResponseDTO {
 
     public void setAmountDue(BigDecimal amountDue) {
         this.amountDue = amountDue;
+    }
+
+    public String getInvoiceNumber() {
+        return invoiceNumber;
+    }
+
+    public void setInvoiceNumber(String invoiceNumber) {
+        this.invoiceNumber = invoiceNumber;
     }
 
     public LocalDateTime getInvoiceDate() {
