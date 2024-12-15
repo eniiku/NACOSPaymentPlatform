@@ -1,6 +1,7 @@
 package com.nacosfunaabpay.paymentplatform.service;
 
 import com.lowagie.text.DocumentException;
+import org.aspectj.apache.bcel.util.ClassPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
     public byte[] generatePdf(String templateName, Context context) throws DocumentException, IOException {
         try {
             logger.info("Generating PDF from template: {}", templateName);
-            String htmlContent = templateEngine.process(templateName, context);
+            String htmlContent = templateEngine.process(String.valueOf(new ClassPath("email/pdfs/" + templateName)), context);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
             ITextRenderer renderer = new ITextRenderer();
