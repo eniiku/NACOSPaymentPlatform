@@ -6,6 +6,6 @@ import com.nacosfunaabpay.paymentplatform.model.Level;
 import java.util.List;
 
 public interface LevelService {
-    Level findLevel(Long levelId);
+    Level findLevel(String levelKey);
     List<Level> getAllLevels();
 }

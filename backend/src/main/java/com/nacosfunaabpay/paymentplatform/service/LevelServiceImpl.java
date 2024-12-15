@@ -20,10 +20,10 @@ public class LevelServiceImpl implements LevelService {
     @Autowired
     private LevelRepository levelRepository;
 
-    public Level findLevel(Long levelId) {
-        return levelRepository.findById(levelId).orElseThrow(() -> {
-            logger.error("Level not found for ID: {}", levelId);
-            return new LevelNotFoundException("Level not found: " + levelId);
+    public Level findLevel(String levelKey) {
+        return levelRepository.findByKey(levelKey).orElseThrow(() -> {
+            logger.error("Level not found for ID: {}", levelKey);
+            return new LevelNotFoundException("Level not found: " + levelKey);
         });
     }
 

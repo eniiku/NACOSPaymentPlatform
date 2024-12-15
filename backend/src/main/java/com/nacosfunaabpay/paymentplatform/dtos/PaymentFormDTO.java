@@ -8,7 +8,7 @@ public class PaymentFormDTO {
     private String phoneNumber;
     private String registrationNumber;
     private String program;
-    private Long level;
+    private String level;
 
     public String getFirstName() {
         return firstName;
@@ -58,11 +58,11 @@ public class PaymentFormDTO {
         this.program = program;
     }
 
-    public Long getLevel() {
+    public String getLevel() {
         return level;
     }
 
-    public void setLevel(Long level) {
+    public void setLevel(String level) {
         this.level = level;
     }
 }
