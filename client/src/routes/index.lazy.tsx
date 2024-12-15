@@ -1,5 +1,5 @@
 import { z } from "zod"
-import axios, { HttpStatusCode } from "axios"
+import { HttpStatusCode } from "axios"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router"
@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select"
 import { Button } from "@/components/ui/button"
 import useInvoiceStore from "@/lib/store/useInvoiceStore"
+import { apiClient } from "@/lib/api"
 
 export const Route = createLazyFileRoute("/")({
     component: Index,
@@ -46,9 +47,9 @@ function Index() {
 
     function onSubmit(values: z.infer<typeof userFormSchema>) {
         // TODO: REFACTOR
-        axios
-            // .post("http://localhost:8443/api/v1/invoices", {
-            .post("http://18.175.120.168:8443/api/v1/invoices", {
+        apiClient
+            .post("/invoices", {
+                // .post("http://18.175.120.168:8443/api/v1/invoices", {
                 program: "Computer Science",
                 email: values.emailAddress,
                 phoneNumber: values.phoneNo,

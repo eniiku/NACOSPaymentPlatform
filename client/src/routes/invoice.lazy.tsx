@@ -1,6 +1,6 @@
 import { z } from "zod"
 import { useForm } from "react-hook-form"
-import axios, { HttpStatusCode } from "axios"
+import { HttpStatusCode } from "axios"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createLazyFileRoute } from "@tanstack/react-router"
 import { ChevronDownIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/select"
 import useInvoiceStore from "@/lib/store/useInvoiceStore"
 import { formatDate } from "@/lib/utils"
+import { apiClient } from "@/lib/api"
 
 export const Route = createLazyFileRoute("/invoice")({
     component: InvoicePage,
@@ -53,9 +54,8 @@ function InvoicePage() {
 
     function onSubmit() {
         // TODO: REFACTOR
-        axios
-            // .post(`http://localhost:8443/api/v1/payments/initialize?invoice_id=${invoice?.id}`)
-            .post(`http://18.175.120.168:8443/api/v1/payments/initialize?invoice_id=${invoice?.id}`)
+        apiClient
+            .post(`/payments/initialize?invoice_id=${invoice?.id}`)
             .then((res) => {
                 console.log(res)
                 const paymentGatewayUrl = res.data?.paymentUrl
