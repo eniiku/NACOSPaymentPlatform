@@ -25,11 +25,13 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
     private final Gson gson = new Gson();
 
     private final String REDIRECT_URL = "http://localhost:5173/verify";
+    private final String FLUTTERWAVE_BASE_URL = "https://api.flutterwave.com/v3";
 
     public String initializePayment(Invoice invoice) throws IOException {
 
         logger.info("Initializing payment for invoice: {}", invoice.getId());
-        String url = "https://api.flutterwave.com/v3/payments";
+        String url = String.format("%s/payments", FLUTTERWAVE_BASE_URL);
+
 
         // Dynamically generate the redirect URL
         String redirectUrl = REDIRECT_URL;
@@ -79,7 +81,7 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
     public boolean verifyPayment(String transactionId) throws IOException {
 
         logger.info("Verifying payment for transaction: {}", transactionId);
-        String url = "https://api.flutterwave.com/v3/transactions/" + transactionId + "/verify";
+        String url = String.format("%s/transactions/%s/verify", FLUTTERWAVE_BASE_URL, transactionId);
 
         Request request = new Request.Builder()
                 .url(url)
@@ -93,6 +95,8 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
             String responseBody = response.body().string();
             Map<String, Object> responseMap = gson.fromJson(responseBody, Map.class);
             Map<String, Object> dataMap = (Map<String, Object>) responseMap.get("data");
+
+            System.out.println("Response: " + responseBody);
 
             boolean isSuccessful = "successful".equals(dataMap.get("status"));
             logger.info("Payment verification result for transaction {}: {}", transactionId,

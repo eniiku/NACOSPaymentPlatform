@@ -22,11 +22,11 @@ public class ProgramServiceImpl implements ProgramService {
 
     @Override
     @Transactional(readOnly = true)
-    public Program findProgram(String programName) {
+    public Program findProgram(String key) {
 
-        return programRepository.findByName(programName).orElseThrow( () -> {
-            logger.error("Level not found for ID: {}", programName);
-            return new ProgramNotFoundException("Level not found for ID: " + programName);
+        return programRepository.findByKey(key).orElseThrow( () -> {
+            logger.error("Level not found for ID: {}", key);
+            return new ProgramNotFoundException("Program not found for program with key: " + key);
         });
     }
 

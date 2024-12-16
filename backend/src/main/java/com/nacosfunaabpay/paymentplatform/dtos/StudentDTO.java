@@ -9,7 +9,8 @@ public class StudentDTO {
     private String phoneNumber;
     private String registrationNumber;
     private LevelDTO level;
-    private LocalDateTime creattedA;
+    private ProgramDTO program;
+    private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public Long getId() {
@@ -52,6 +53,14 @@ public class StudentDTO {
         this.registrationNumber = registrationNumber;
     }
 
+    public ProgramDTO getProgram() {
+        return program;
+    }
+
+    public void setProgram(ProgramDTO program) {
+        this.program = program;
+    }
+
     public LevelDTO getLevel() {
         return level;
     }
@@ -60,12 +69,12 @@ public class StudentDTO {
         this.level = level;
     }
 
-    public LocalDateTime getCreattedA() {
-        return creattedA;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreattedA(LocalDateTime creattedA) {
-        this.creattedA = creattedA;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public LocalDateTime getUpdatedAt() {
