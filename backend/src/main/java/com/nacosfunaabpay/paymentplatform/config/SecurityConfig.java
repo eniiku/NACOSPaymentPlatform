@@ -41,7 +41,7 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 //        TODO:! I probably shouldn't be hardcoidng whitelisted production IP's
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://18.175.120.168:5173"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://3.8.182.85:5173","http://3.8.182.85"));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true);
