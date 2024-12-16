@@ -54,6 +54,9 @@ export default {
                     green: "#008000",
                 },
             },
+            fontSize: {
+                "18px": "1.125rem",
+            },
         },
     },
     plugins: [require("tailwindcss-animate")],

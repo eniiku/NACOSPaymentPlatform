@@ -1,17 +1,124 @@
-import { Button } from "@/components/ui/button"
 import { createLazyFileRoute } from "@tanstack/react-router"
 
+import { Button } from "@/components/ui/button"
+import { DownloadIcon } from "@radix-ui/react-icons"
+import { usePDFDownload } from "@/hooks/use-pdf-download"
+
 export const Route = createLazyFileRoute("/success")({
-    component: () => (
-        <main className="grid place-items-center w-screen h-screen">
-            <div className="space-y-6 text-center text-white">
-                <h1 className="text-3xl">Payment Succesful</h1>
-                <p className="text-lg">Be sure to remit your reciept & get it stamped.</p>
+    component: SuccessPage,
+})
 
-                <Button>Download Here</Button>
+function SuccessPage() {
+    const { downloading, downloadPDF } = usePDFDownload()
 
-                <p>or, Check you email!</p>
+    const handleDownloadReceipt = () =>
+        downloadPDF({ type: "receipt", studentRegistrationNo: "Hi", identifier: "1" })
+
+    return (
+        <main className="md:flex px-4 pt-11 pb-6 justify-evenly md:px-36 md:pt-24">
+            <div className="hidden md:flex flex-col justify-between mb-6">
+                <div className="space-y-2 md:space-y-0 text-center md:text-justify px-3 text-white max-w-[482px]">
+                    <h1 className="font-bold text-xl md:text-4xl tracking-tighter uppercase">
+                        Hello there! Pay Your NACOS Dues Easily and Securely here
+                    </h1>
+                    <p className="text-sm md:text-xl md:font-medium">
+                        Welcome to the official payment portal for NACOS dues. Kindly provide
+                        accurate information to ensure a successful payment.
+                    </p>
+                </div>
+
+                <div className="hidden md:flex items-center text-white gap-3">
+                    {/* TODO: create optimized image component */}
+                    <img
+                        src="/logo.svg"
+                        alt=""
+                        width={48}
+                        height={48}
+                        className="md:w-12 md:h-12"
+                    />
+
+                    <div className="">
+                        <h3 className="font-bold text-xl tracking-tighter">NACOS, FUNAAB</h3>
+                        <p className="font-medium text-lg">
+                            Nigeria Association of Computing Students
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <section className="bg-white rounded-xl py-7 px-3 w-full md:max-w-[400px]">
+                <div className="space-y-6">
+                    <img
+                        src="/circle-check.svg"
+                        width={84}
+                        height={84}
+                        alt=""
+                        className="mx-auto"
+                    />
+
+                    <div className="space-y-2 text-center max-w-[300px] mx-auto">
+                        <h2 className="font-bold text-18px lg:text-xl text-black/90">
+                            Payment Successful
+                        </h2>
+
+                        <p className="text-base text-black/60">
+                            You&apos;ve successfully paid your NACOS Dues. Be sure to download your
+                            receipt and get it stamped
+                        </p>
+                    </div>
+                </div>
+
+                <div className="w-full h-[1px] border-[0.5px] border-dashed border-[#BBBBBB] my-9"></div>
+
+                <div>
+                    <h4 className="font-semibold text-sm">Your NACOS Due Payment Details</h4>
+
+                    <ul className="mt-2.5 mb-7 text-sm text-black/50 py-3.5 px-2.5 rounded-lg bg-[#F8F8F8]">
+                        <li className="p-1 flex items-center justify-between">
+                            <p className="">Receipt Number</p>
+                            <h3 className="font-medium text-black/90">#NAC128</h3>
+                        </li>
+                        <li className="p-1 flex items-center justify-between">
+                            <p className="">Payment Date</p>
+                            <h3 className="font-medium text-black/90">#NAC128</h3>
+                        </li>
+                        <li className="p-1 flex items-center justify-between">
+                            <p className="">Payment Method</p>
+                            <h3 className="font-medium text-black/90">#NAC128</h3>
+                        </li>
+                        <li className="p-1 flex items-center justify-between">
+                            <p className="">Payment Amount</p>
+                            <h3 className="font-medium text-black/90">#NAC128</h3>
+                        </li>
+                    </ul>
+
+                    <div className="space-y-1">
+                        <Button
+                            disabled={downloading}
+                            onClick={handleDownloadReceipt}
+                            className="h-auto py-[18px] w-full bg-custom-green hover:bg-custom-green/95 text-white font-bold text-base"
+                        >
+                            {downloading ? "Loading..." : "Download Receipt"}
+                            <span className="ml-3">
+                                <DownloadIcon width={24} height={24} strokeWidth={4} />
+                            </span>
+                        </Button>
+                        <p className="w-full h-auto text-custom-green text-sm text-center py-1">
+                            Or check your email
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <div className="md:hidden flex items-center gap-3 px-3 text-white mt-16">
+                {/* TODO: create optimized image component */}
+                <img src="/logo.svg" alt="" width={32} height={32} />
+
+                <div className="space-y-0.5">
+                    <h3 className="font-bold">NACOS, FUNAAB</h3>
+                    <p className="font-medium text-sm">Nigeria Association of Computing Students</p>
+                </div>
             </div>
         </main>
-    ),
-})
+    )
+}
