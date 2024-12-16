@@ -26,6 +26,7 @@ import {
 import useInvoiceStore from "@/lib/store/useInvoiceStore"
 import { formatDate } from "@/lib/utils"
 import { apiClient } from "@/lib/api"
+import { usePDFDownload } from "@/hooks/use-pdf-download"
 
 export const Route = createLazyFileRoute("/invoice")({
     component: InvoicePage,
@@ -33,10 +34,13 @@ export const Route = createLazyFileRoute("/invoice")({
 
 function InvoicePage() {
     const { invoice } = useInvoiceStore()
+    const { downloading, downloadPDF } = usePDFDownload()
 
     const firstName = invoice?.student.name.split(" ")[0] as string
     const lastName = invoice?.student.name.split(" ")[1] as string
     const email = invoice?.student.email as string
+    const level = invoice?.student.level.key
+    const program = invoice?.student.program.key
     const phoneNumber = invoice?.student.phoneNumber as string
     const registrationNumber = invoice?.student.registrationNumber as string
 
@@ -47,15 +51,18 @@ function InvoicePage() {
             lastName,
             emailAddress: email,
             registrationNo: registrationNumber,
-            level: "4",
+            level: level!,
+            program: program!,
             phoneNo: phoneNumber,
         },
     })
 
+    // implement logic to alert users of loading state
+
     function onSubmit() {
         // TODO: REFACTOR
         apiClient
-            .post(`/payments/initialize?invoice_id=${invoice?.id}`)
+            .post(`/payments/initialize?invoice_no=${invoice?.invoiceNumber}`)
             .then((res) => {
                 console.log(res)
                 const paymentGatewayUrl = res.data?.paymentUrl
@@ -65,6 +72,13 @@ function InvoicePage() {
                 console.log("[ERROR]: ", err)
             })
     }
+
+    const handleDownloadInvoice = () =>
+        downloadPDF({
+            type: "invoice",
+            studentRegistrationNo: registrationNumber,
+            identifier: invoice?.invoiceNumber as string,
+        })
 
     return (
         <>
@@ -93,7 +107,7 @@ function InvoicePage() {
                             Invoice Number
                         </p>
 
-                        <h5 className="font-semibold text-black/80">#{invoice?.id}</h5>
+                        <h5 className="font-semibold text-black/80">#{invoice?.invoiceNumber}</h5>
                     </div>
 
                     <div className="p-1 space-y-2">
@@ -135,14 +149,16 @@ function InvoicePage() {
                                 <img src="/verified.svg" alt="" width={24} height={24} />
 
                                 <p className="font-medium text-black/90 lg:text-lg">
-                                    Computer Science
+                                    {invoice?.student.program.name}
                                 </p>
                             </li>
 
                             <li className="flex items-center gap-3">
                                 <img src="/verified.svg" alt="" width={24} height={24} />
 
-                                <p className="font-medium text-black/90 lg:text-lg">300L</p>
+                                <p className="font-medium text-black/90 lg:text-lg">
+                                    {invoice?.student.level.name}
+                                </p>
                             </li>
 
                             <li className="flex items-center gap-3">
@@ -247,10 +263,12 @@ function InvoicePage() {
                         MAKE PAYMENT
                     </Button>
                     <Button
+                        onClick={handleDownloadInvoice}
+                        disabled={downloading}
                         variant="secondary"
                         className="w-full h-auto font-bold text-sm py-4 bg-green-50 text-green-600 hover:bg-green-100"
                     >
-                        DOWNLOAD INVOICE
+                        {downloading ? "Loading..." : "DOWNLOAD INVOICE"}
                     </Button>
                 </div>
             </div>
