@@ -1,6 +1,7 @@
 import { z } from "zod"
-import { useForm } from "react-hook-form"
+import { useState } from "react"
 import { HttpStatusCode } from "axios"
+import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createLazyFileRoute } from "@tanstack/react-router"
 import { ChevronDownIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
@@ -36,6 +37,8 @@ function InvoicePage() {
     const { invoice } = useInvoiceStore()
     const { downloading, downloadPDF } = usePDFDownload()
 
+    const [isSubmitLoading, setIsSubmitLoading] = useState(false)
+
     const firstName = invoice?.student.name.split(" ")[0] as string
     const lastName = invoice?.student.name.split(" ")[1] as string
     const email = invoice?.student.email as string
@@ -61,16 +64,19 @@ function InvoicePage() {
 
     function onSubmit() {
         // TODO: REFACTOR
+        setIsSubmitLoading(true)
         apiClient
             .post(`/payments/initialize?invoice_no=${invoice?.invoiceNumber}`)
             .then((res) => {
                 console.log(res)
                 const paymentGatewayUrl = res.data?.paymentUrl
                 if (res.status === HttpStatusCode.Ok) window.location.href = paymentGatewayUrl
+                setIsSubmitLoading(false)
             })
             .catch((err) => {
                 console.log("[ERROR]: ", err)
             })
+            .finally(() => setIsSubmitLoading(false))
     }
 
     const handleDownloadInvoice = () =>
@@ -257,10 +263,11 @@ function InvoicePage() {
                 {/* Action Buttons */}
                 <div className="space-y-3 lg:mt-16 flex gap-3 items-center md:space-y-0">
                     <Button
+                        disabled={isSubmitLoading}
                         onClick={onSubmit}
                         className="w-full h-auto font-bold text-sm py-4 bg-green-700 hover:bg-green-800"
                     >
-                        MAKE PAYMENT
+                        {isSubmitLoading ? "Loading..." : "MAKE PAYMENT"}
                     </Button>
                     <Button
                         onClick={handleDownloadInvoice}
