@@ -1,27 +1,5 @@
 import { create } from "zustand"
-
-export interface Level {
-    key: "L100" | "L200" | "L200F" | "L300" | "L400"
-    name: string
-}
-
-export interface Program {
-    key: "CSC" | "DSC" | "IFS" | "IFT" | "ICT" | "SWE" | "CYS"
-    name: string
-    description: string
-}
-
-interface Student {
-    createdAt: string
-    updatedAt: string
-    id: number
-    name: string
-    email: string
-    level: Level
-    program: Program
-    phoneNumber: string
-    registrationNumber: string
-}
+import { Student } from "../types"
 
 interface Invoice {
     id: number
