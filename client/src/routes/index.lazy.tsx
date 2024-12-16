@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button"
 import useInvoiceStore from "@/lib/store/useInvoiceStore"
 import { apiClient } from "@/lib/api"
+import { PROGRAMS } from "@/lib/data"
 
 export const Route = createLazyFileRoute("/")({
     component: Index,
@@ -41,6 +42,7 @@ function Index() {
             emailAddress: "",
             registrationNo: "",
             level: undefined,
+            program: undefined,
             phoneNo: "",
         },
     })
@@ -51,7 +53,6 @@ function Index() {
         apiClient
             .post("/invoices", {
                 // .post("http://18.175.120.168:8443/api/v1/invoices", {
-                program: "Computer Science",
                 email: values.emailAddress,
                 phoneNumber: values.phoneNo,
                 registrationNumber: values.registrationNo,
@@ -183,6 +184,38 @@ function Index() {
 
                         <FormField
                             control={form.control}
+                            name="program"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormControl>
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            defaultValue={field.value}
+                                        >
+                                            <SelectTrigger className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium">
+                                                <SelectValue placeholder="Select Program" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {PROGRAMS.map((program) => (
+                                                    <SelectItem
+                                                        key={program.key}
+                                                        value={program.key}
+                                                        className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                    >
+                                                        {program.name}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </FormControl>
+                                    <FormDescription />
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
                             name="level"
                             render={({ field }) => (
                                 <FormItem>
@@ -192,7 +225,7 @@ function Index() {
                                             defaultValue={field.value}
                                         >
                                             <SelectTrigger className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium">
-                                                <SelectValue placeholder="Level" />
+                                                <SelectValue placeholder="Select Level" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem

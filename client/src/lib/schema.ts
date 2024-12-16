@@ -6,5 +6,6 @@ export const userFormSchema = z.object({
     emailAddress: z.string().email().max(50),
     registrationNo: z.string().min(8).max(14),
     level: z.enum(["L100", "L200", "L200F", "L300", "L400"]),
+    program: z.enum(["CSC", "DSC", "IFS", "IFT", "ICT", "SWE", "CYS"]),
     phoneNo: z.string().regex(/^(?:\+?234|0)([789]\d{9})$/),
 })
