@@ -81,7 +81,7 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
         requestMap.put("tx_ref", txRef);
         requestMap.put("amount", invoice.getAmountDue());
         requestMap.put("currency", "NGN");
-        String REDIRECT_URL = "http://localhost:5173/verify";
+        String REDIRECT_URL = "http://3.8.182.85:5173/verify";
         requestMap.put("redirect_url", REDIRECT_URL);
         requestMap.put("payment_options", "card,ussd,banktransfer,account,internetbanking,nqr,applepay,googlepay,enaira,opay");
 
