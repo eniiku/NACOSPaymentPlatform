@@ -1,4 +1,4 @@
-import { Level, Program } from "./store/useInvoiceStore"
+import { Level, Program } from "./types"
 
 export const PROGRAMS: Program[] = [
     {
