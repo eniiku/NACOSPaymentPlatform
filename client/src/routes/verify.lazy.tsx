@@ -28,7 +28,7 @@ function VerifyPage() {
         try {
             // Replace with your actual backend API endpoint
             const res = await apiClient.get(
-                `/payments/verify?transaction_id=${transactionId}&invoice_no=${txRef}`
+                `/payments/verify?transaction_id=${transactionId}&trx_ref=${txRef}`
                 // `http://18.175.120.168:8443/api/v1/payments/verify?transaction_id=${transactionId}&invoice_id=${txRef}`
             )
 

@@ -24,7 +24,7 @@ import {
 import { Button } from "@/components/ui/button"
 import useInvoiceStore from "@/lib/store/useInvoiceStore"
 import { apiClient } from "@/lib/api"
-import { PROGRAMS } from "@/lib/data"
+import { LEVELS, PROGRAMS } from "@/lib/data"
 
 export const Route = createLazyFileRoute("/")({
     component: Index,
@@ -228,37 +228,15 @@ function Index() {
                                                 <SelectValue placeholder="Select Level" />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem
-                                                    value="L100"
-                                                    className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                >
-                                                    100 LEVEL
-                                                </SelectItem>
-                                                <SelectItem
-                                                    value="L200F"
-                                                    className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                >
-                                                    DIRECT ENTRY
-                                                </SelectItem>
-                                                <SelectItem
-                                                    value="L200"
-                                                    className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                >
-                                                    200 LEVEL
-                                                </SelectItem>
-
-                                                <SelectItem
-                                                    value="L300"
-                                                    className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                >
-                                                    300 LEVEL
-                                                </SelectItem>
-                                                <SelectItem
-                                                    value="L400"
-                                                    className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                >
-                                                    400 LEVEL
-                                                </SelectItem>
+                                                {LEVELS.map((level) => (
+                                                    <SelectItem
+                                                        key={level.key}
+                                                        value={level.key}
+                                                        className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium uppercase"
+                                                    >
+                                                        {level.name}
+                                                    </SelectItem>
+                                                ))}
                                             </SelectContent>
                                         </Select>
                                     </FormControl>

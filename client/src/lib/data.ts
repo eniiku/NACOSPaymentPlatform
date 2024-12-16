@@ -37,3 +37,26 @@ export const PROGRAMS: Program[] = [
         description: "Study of protecting systems, networks, and programs from digital attacks",
     },
 ]
+
+export const LEVELS: Level[] = [
+    {
+        key: "L100",
+        name: "100 Level",
+    },
+    {
+        key: "L200F",
+        name: "Direct Entry",
+    },
+    {
+        key: "L200",
+        name: "200 Level",
+    },
+    {
+        key: "L300",
+        name: "300 Level",
+    },
+    {
+        key: "L400",
+        name: "400 Level",
+    },
+]
