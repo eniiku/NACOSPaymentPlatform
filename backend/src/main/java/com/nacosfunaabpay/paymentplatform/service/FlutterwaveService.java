@@ -7,5 +7,5 @@ import java.io.IOException;
 public interface FlutterwaveService {
     String initializePayment(Invoice invoice) throws IOException;
 
-    boolean verifyPayment(String transactionId) throws IOException;
+    FlutterwaveServiceImpl.PaymentVerificationResult verifyPayment(String transactionId) throws RuntimeException;
 }
