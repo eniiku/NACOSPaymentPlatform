@@ -4,6 +4,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.nacosfunaabpay.paymentplatform.dtos.PaymentVerificationResultDTO;
 import com.nacosfunaabpay.paymentplatform.model.Invoice;
 import io.micrometer.common.util.StringUtils;
 import okhttp3.*;
@@ -162,38 +163,7 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
         }
     }
 
-    public static class PaymentVerificationResult {
-        private final boolean successful;
-        private final String status;
-        private final String message;
-        private final Map<String, Object> transactionDetails;
-
-        // Constructor and getters
-        public PaymentVerificationResult(boolean successful, String status, String message, Map<String, Object> transactionDetails) {
-            this.successful = successful;
-            this.status = status;
-            this.message = message;
-            this.transactionDetails = transactionDetails;
-        }
-
-        public boolean isSuccessful() {
-            return successful;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public Map<String, Object> getTransactionDetails() {
-            return transactionDetails;
-        }
-    }
-
-    public PaymentVerificationResult verifyPayment(String transactionId) throws RuntimeException {
+    public PaymentVerificationResultDTO verifyPayment(String transactionId) throws RuntimeException {
         if (StringUtils.isBlank(transactionId)) {
             throw new RuntimeException("Transaction ID cannot be empty");
         }
@@ -223,7 +193,7 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
         return client.newCall(request).execute();
     }
 
-    private PaymentVerificationResult processVerificationResponse(Response response, String transactionId) throws IOException, RuntimeException {
+    private PaymentVerificationResultDTO processVerificationResponse(Response response, String transactionId) throws IOException, RuntimeException {
 
         if (!response.isSuccessful()) {
             handleUnsuccessfulResponse(response, transactionId);
@@ -252,7 +222,7 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
 
             String message = isSuccessful ? "Payment verified successfully" : "Payment verification failed: " + status;
 
-            return new PaymentVerificationResult(isSuccessful, status, message, dataMap);
+            return new PaymentVerificationResultDTO(isSuccessful, status, message, dataMap);
 
         } catch (JsonSyntaxException e) {
             throw new RuntimeException("Failed to parse payment gateway response", e);

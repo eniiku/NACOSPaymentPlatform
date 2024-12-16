@@ -1,5 +1,6 @@
 package com.nacosfunaabpay.paymentplatform.service;
 
+import com.nacosfunaabpay.paymentplatform.dtos.PaymentVerificationResultDTO;
 import com.nacosfunaabpay.paymentplatform.model.Invoice;
 
 import java.io.IOException;
@@ -7,5 +8,5 @@ import java.io.IOException;
 public interface FlutterwaveService {
     String initializePayment(Invoice invoice) throws IOException;
 
-    FlutterwaveServiceImpl.PaymentVerificationResult verifyPayment(String transactionId) throws RuntimeException;
+    PaymentVerificationResultDTO verifyPayment(String transactionId) throws RuntimeException;
 }
