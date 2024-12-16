@@ -15,7 +15,11 @@ function SuccessPage() {
     const { downloading, downloadPDF } = usePDFDownload()
 
     const handleDownloadReceipt = () =>
-        downloadPDF({ type: "receipt", studentRegistrationNo: "Hi", identifier: "1" })
+        downloadPDF({
+            type: "receipt",
+            studentRegistrationNo: payment?.receipt.payment.student.registrationNumber as string,
+            identifier: payment?.receipt.id.toString() as string,
+        })
 
     return (
         <main className="md:flex px-4 pt-11 pb-6 justify-evenly md:px-36 md:pt-24">

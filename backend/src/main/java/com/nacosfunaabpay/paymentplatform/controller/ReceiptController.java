@@ -34,7 +34,7 @@ public class ReceiptController {
                     .orElseThrow(() -> new RuntimeException("Receipt not found"));
 
             Context context = new Context();
-            context.setVariable("title", String.format("%s_%receipt",
+            context.setVariable("title", String.format("%s_%s receipt",
                     receipt.getPayment().getStudent().getRegistrationNumber(),
                     receipt.getReceiptDate()));
             context.setVariable("content", String.format("NACOS dues receipt for %s for the %s session",
