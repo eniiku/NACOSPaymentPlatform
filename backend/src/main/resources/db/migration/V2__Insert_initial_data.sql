@@ -10,7 +10,7 @@ VALUES ('CSC', 'Computer Science', 'Description for Computer Science'),
 
 INSERT INTO level (key, name, dues_amount)
 VALUES ('L100', '100 Level', 5000.00),
-       ('L200F', '200 Level - Fresher(DE)', 5000.00),
+       ('L200F', 'Direct Entry', 5000.00),
        ('L200', '200 Level', 3500.00),
        ('L300', '300 Level', 3500.00),
        ('L400', '400 Level', 3500.00)

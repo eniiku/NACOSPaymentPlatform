@@ -40,12 +40,6 @@ public class Student extends AuditableEntity {
     @JoinColumn(name = "academic_year_id", nullable = false)
     private AcademicYear academicYear;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
     @OneToMany(mappedBy = "student")
     private Set<Payment> payments;
 
@@ -114,22 +108,6 @@ public class Student extends AuditableEntity {
 
     public void setAcademicYear(AcademicYear academicYear) {
         this.academicYear = academicYear;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public Set<Payment> getPayments() {

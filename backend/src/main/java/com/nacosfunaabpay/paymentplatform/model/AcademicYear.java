@@ -2,11 +2,8 @@ package com.nacosfunaabpay.paymentplatform.model;
 
 import com.nacosfunaabpay.paymentplatform.model.entity.AuditableEntity;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -28,11 +25,6 @@ public class AcademicYear extends AuditableEntity {
     @Column(nullable = false)
     private boolean isCurrent = false;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "academicYear")
     private Set<Student> students;
@@ -75,22 +67,6 @@ public class AcademicYear extends AuditableEntity {
 
     public void setCurrent(boolean current) {
         isCurrent = current;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public Set<Student> getStudents() {

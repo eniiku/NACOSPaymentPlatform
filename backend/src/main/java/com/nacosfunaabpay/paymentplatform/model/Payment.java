@@ -2,8 +2,6 @@ package com.nacosfunaabpay.paymentplatform.model;
 
 import com.nacosfunaabpay.paymentplatform.model.entity.AuditableEntity;
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,12 +34,6 @@ public class Payment extends AuditableEntity {
 
     @Column(nullable = false, unique = true)
     private String transactionReference;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 
     @OneToOne(mappedBy = "payment")
     private Receipt receipt;
@@ -108,22 +100,6 @@ public class Payment extends AuditableEntity {
 
     public void setTransactionReference(String transactionReference) {
         this.transactionReference = transactionReference;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public Receipt getReceipt() {

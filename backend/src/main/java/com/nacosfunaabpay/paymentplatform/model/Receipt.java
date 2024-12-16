@@ -23,12 +23,6 @@ public class Receipt extends AuditableEntity {
     @Column(nullable = false)
     private LocalDateTime receiptDate;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
     public Long getId() {
         return id;
     }
@@ -59,23 +53,5 @@ public class Receipt extends AuditableEntity {
 
     public void setReceiptDate(LocalDateTime receiptDate) {
         this.receiptDate = receiptDate;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    @Override
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    @Override
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }
