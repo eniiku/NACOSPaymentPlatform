@@ -5,6 +5,6 @@ export const userFormSchema = z.object({
     lastName: z.string().min(2).max(50),
     emailAddress: z.string().email().max(50),
     registrationNo: z.string().min(8).max(14),
-    level: z.enum(["1", "2", "3", "4", "5"]),
+    level: z.enum(["L100", "L200", "L200F", "L300", "L400"]),
     phoneNo: z.string().regex(/^(?:\+?234|0)([789]\d{9})$/),
 })

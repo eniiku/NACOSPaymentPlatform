@@ -47,6 +47,7 @@ function Index() {
 
     function onSubmit(values: z.infer<typeof userFormSchema>) {
         // TODO: REFACTOR
+        //TODO: I THINK THE BACKEND IS FETCHING THE DETAILS PER MATRIC NUMBER. RESTRICT THAT
         apiClient
             .post("/invoices", {
                 // .post("http://18.175.120.168:8443/api/v1/invoices", {
@@ -195,32 +196,32 @@ function Index() {
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem
-                                                    value="1"
+                                                    value="L100"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                 >
                                                     100 LEVEL
                                                 </SelectItem>
                                                 <SelectItem
-                                                    value="2"
-                                                    className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                >
-                                                    200 LEVEL
-                                                </SelectItem>
-                                                <SelectItem
-                                                    // value="DE"
-                                                    value="3"
+                                                    value="L200F"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                 >
                                                     DIRECT ENTRY
                                                 </SelectItem>
                                                 <SelectItem
-                                                    value="4"
+                                                    value="L200"
+                                                    className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                >
+                                                    200 LEVEL
+                                                </SelectItem>
+
+                                                <SelectItem
+                                                    value="L300"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                 >
                                                     300 LEVEL
                                                 </SelectItem>
                                                 <SelectItem
-                                                    value="5"
+                                                    value="L400"
                                                     className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                 >
                                                     400 LEVEL

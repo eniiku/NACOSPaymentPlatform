@@ -1,11 +1,17 @@
 import { create } from "zustand"
 
+interface Level {
+    key: "L100" | "L200" | "L200F" | "L300" | "L400"
+    name: string
+}
+
 interface Student {
     createdAt: string
     updatedAt: string
     id: number
     name: string
     email: string
+    level: Level
     phoneNumber: string
     registrationNumber: string
 }
@@ -15,6 +21,7 @@ interface Invoice {
     student: Student
     level: string | null
     amountDue: number
+    invoiceNumber: string
     invoiceDate: string
     invoiceStatus: string
     dueDate: string
