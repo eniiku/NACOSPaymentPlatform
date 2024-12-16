@@ -3,12 +3,15 @@ import { createLazyFileRoute } from "@tanstack/react-router"
 import { Button } from "@/components/ui/button"
 import { DownloadIcon } from "@radix-ui/react-icons"
 import { usePDFDownload } from "@/hooks/use-pdf-download"
+import usePaymentStore from "@/lib/store/use-payment-store"
+import { formatReadableString } from "@/lib/utils"
 
 export const Route = createLazyFileRoute("/success")({
     component: SuccessPage,
 })
 
 function SuccessPage() {
+    const { payment } = usePaymentStore()
     const { downloading, downloadPDF } = usePDFDownload()
 
     const handleDownloadReceipt = () =>
@@ -76,19 +79,29 @@ function SuccessPage() {
                     <ul className="mt-2.5 mb-7 text-sm text-black/50 py-3.5 px-2.5 rounded-lg bg-[#F8F8F8]">
                         <li className="p-1 flex items-center justify-between">
                             <p className="">Receipt Number</p>
-                            <h3 className="font-medium text-black/90">#NAC128</h3>
+                            <h3 className="font-medium text-black/90">
+                                #{payment?.receipt.receiptNumber}
+                            </h3>
                         </li>
                         <li className="p-1 flex items-center justify-between">
                             <p className="">Payment Date</p>
-                            <h3 className="font-medium text-black/90">#NAC128</h3>
+                            <h3 className="font-medium text-black/90">
+                                {payment?.receipt.payment.paymentDate}
+                            </h3>
                         </li>
                         <li className="p-1 flex items-center justify-between">
                             <p className="">Payment Method</p>
-                            <h3 className="font-medium text-black/90">#NAC128</h3>
+                            <h3 className="font-medium text-black/90">
+                                {formatReadableString(
+                                    payment?.receipt.payment.paymentMethod as string
+                                )}
+                            </h3>
                         </li>
                         <li className="p-1 flex items-center justify-between">
                             <p className="">Payment Amount</p>
-                            <h3 className="font-medium text-black/90">#NAC128</h3>
+                            <h3 className="font-medium text-black/90">
+                                {payment?.receipt.payment.amountPaid}
+                            </h3>
                         </li>
                     </ul>
 

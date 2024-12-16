@@ -1,4 +1,5 @@
 import { apiClient } from "@/lib/api"
+import usePaymentStore from "@/lib/store/use-payment-store"
 import { createLazyFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
 import { HttpStatusCode } from "axios"
 import { useEffect } from "react"
@@ -11,7 +12,9 @@ function VerifyPage() {
     const search: { status: string; tx_ref: string; transaction_id: string } = useSearch({
         from: "/verify",
     })
+
     const navigate = useNavigate()
+    const { setPayment } = usePaymentStore()
 
     useEffect(() => {
         const txRef = search?.tx_ref
@@ -33,6 +36,7 @@ function VerifyPage() {
             )
 
             if (res.status === HttpStatusCode.Ok) {
+                setPayment(res.data)
                 navigate({ to: "/success" })
             } else {
                 throw new Error("Transaction verifiction failed")
