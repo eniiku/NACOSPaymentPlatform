@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.Context;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 @RequestMapping("/api/v1/receipts")
@@ -40,6 +42,14 @@ public class ReceiptController {
             context.setVariable("content", String.format("NACOS dues receipt for %s for the %s session",
                     receipt.getPayment().getStudent().getName(),
                     receipt.getPayment().getStudent().getAcademicYear().getYear()));
+            context.setVariable("receipt", receipt);
+
+            // Get the current local date and time
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            // Create a formatter matching the desired format
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy, hh:mm a");
+
+            context.setVariable("currentDate", currentDateTime.format(formatter));
 
             byte[] pdfBytes = pdfGenerationService.generatePdf("receipt", context);
 

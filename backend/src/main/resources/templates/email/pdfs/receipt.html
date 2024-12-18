@@ -3,6 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width" />
     <title th:text="${title}" />
     <style type="text/css">
         html {
@@ -182,17 +183,17 @@
     <table class="customer-info">
         <tr>
             <td style="width: 60%;">
-                <div class="customer-name">Danny Phantom Hemsworth Jr.</div>
+                <div th:text="${receipt.payment.student.name}" class="customer-name" />
                 <div class="customer-details">
-                    <div>Matric No: 20223902</div>
-                    <div>Department: Computer Science (300L)</div>
-                    <div>Email Address: dannyphantom09@gmail.com</div>
-                    <div>Phone Number: 07014019002</div>
+                    <div>Matric No: <span th:text="${receipt.payment.student.registrationNumber}" /></div>
+                    <div>Department: <span th:text="${receipt.payment.student.program.name}"/> (<span th:text="${receipt.payment.student.level.name}"/>)</div>
+                    <div>Email Address: <span th:text="${receipt.payment.student.email}" /></div>
+                    <div>Phone Number: <span th:text="${receipt.payment.student.phoneNumber}" /></div>
                 </div>
             </td>
             <td style="width: 40%;" align="right">
                 <div class="receipt-header">NACOS RECEIPT</div>
-                <div class="receipt-number">Receipt No: 904K0L0POG</div>
+                <div class="receipt-number">Receipt No: <span th:text="${receipt.receiptNumber}" /></div>
             </td>
         </tr>
     </table>
@@ -204,15 +205,15 @@
         </tr>
         <tr>
             <td>Payment for <strong>2024/2025 NACOS Dues</strong></td>
-            <td class="amount">NGN3,000.00</td>
+            <td class="amount">NGN<span th:text="${receipt.payment.amountPaid}"/></td>
         </tr>
         <tr>
             <td><strong>Subtotal</strong></td>
-            <td class="amount"><strong>NGN3,000.00</strong></td>
+            <td class="amount">NGN<span th:text="${receipt.payment.amountPaid}"/></td>
         </tr>
         <tr class="total-row">
             <td><strong>TOTAL</strong></td>
-            <td class="amount"><strong>NGN3,000.00</strong></td>
+            <td class="amount"><span>NGN<strong th:text="${receipt.payment.amountPaid}"/></span></td>
         </tr>
     </table>
 </div>
@@ -220,7 +221,7 @@
 <div class="footer-section">
     <div class="stamp-line"></div>
     <div class="stamp-text">Fin. Sec. Stamp</div>
-    <div class="print-date">Printed: 12-02-2024, 12:09 AM</div>
+    <div class="print-date">Printed: <span th:text="${currentDate}" /></div>
 </div>
 </body>
 </html>
