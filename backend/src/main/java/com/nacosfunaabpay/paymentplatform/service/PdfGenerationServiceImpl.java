@@ -26,7 +26,7 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
     public byte[] generatePdf(String templateName, Context context) throws DocumentException, IOException {
         try {
             logger.info("Generating PDF from template: {}", templateName);
-            String htmlContent = templateEngine.process(String.valueOf(new ClassPath("email/pdfs/" + templateName)), context);
+            String htmlContent = templateEngine.process(String.valueOf(new ClassPath("pdf/" + templateName)), context);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
             ITextRenderer renderer = new ITextRenderer();
