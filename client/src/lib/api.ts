@@ -1,8 +1,9 @@
 import axios from "axios"
 
+const backendApiBaseUrl = import.meta.env.VITE_BACKEND_API_BASE_URL
+
 export const apiClient = axios.create({
-    // baseURL: import.meta.env.BACKEND_API_BASE_URL || "http://localhost:8443/api/v1",
-    baseURL: "http://3.8.182.85:8443/api/v1",
+    baseURL: backendApiBaseUrl ? `${backendApiBaseUrl}/api/v1` : "http://localhost:8443/api/v1",
     timeout: 30000,
     withCredentials: true,
 })
