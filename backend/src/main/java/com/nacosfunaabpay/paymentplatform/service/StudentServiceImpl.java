@@ -8,13 +8,18 @@ import com.nacosfunaabpay.paymentplatform.model.Program;
 import com.nacosfunaabpay.paymentplatform.model.Student;
 import com.nacosfunaabpay.paymentplatform.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
+    private static final Logger log = LoggerFactory.getLogger(StudentServiceImpl.class);
+
     @Autowired
     private StudentRepository studentRepository;
 
@@ -27,34 +32,47 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private AcademicYearService academicYearService;
 
-    @Override
     @Transactional
-    public Student createOrUpdateStudent(Student student) {
+    public Student handleStudentRegistration(PaymentFormDTO paymentForm) {
+        log.info("Processing registration for student number: {}", paymentForm.getRegistrationNumber());
 
-//        todo: work logic to update student values on user re-submit with the same values...
-        if (student.getId() == null) {
-            student.setCreatedAt(LocalDateTime.now());
+        try {
+            Optional<Student> existingStudent = findStudentByRegistrationNumber(paymentForm.getRegistrationNumber());
+
+            if (existingStudent.isPresent()) {
+                Student updatedStudent = updateExistingStudent(existingStudent.get(), paymentForm);
+                log.info("Updated existing student registration: {}", updatedStudent.getRegistrationNumber());
+                return updatedStudent;
+            } else {
+                Student newStudent = createNewStudent(paymentForm);
+                log.info("Created new student registration: {}", newStudent.getRegistrationNumber());
+                return newStudent;
+            }
+        } catch (Exception e) {
+            log.error("Error processing student registration: {}", paymentForm.getRegistrationNumber(), e);
+            throw new RuntimeException("Failed to process student registration", e);
         }
-        student.setUpdatedAt(LocalDateTime.now());
+    }
+
+    private Optional<Student> findStudentByRegistrationNumber(String registrationNumber) {
+        log.debug("Finding student by registration number: {}", registrationNumber);
+        return studentRepository.findByRegistrationNumber(registrationNumber);
+    }
+
+    private Student createNewStudent(PaymentFormDTO paymentForm) {
+        log.debug("Creating new student with registration number: {}", paymentForm.getRegistrationNumber());
+        Student student = new Student();
+        updateStudentFromForm(student, paymentForm);
         return studentRepository.save(student);
     }
 
-    @Override
-    public Student findStudentByEmail(String email) {
-        return studentRepository.findByEmail(email)
-                .orElseThrow(() -> new StudentNotFoundException("Student not found with email: " + email));
+    private Student updateExistingStudent(Student student, PaymentFormDTO paymentForm) {
+        log.debug("Updating existing student: {}", student.getRegistrationNumber());
+        updateStudentFromForm(student, paymentForm);
+        return studentRepository.save(student);
     }
 
-    @Override
-    public Student findStudentByRegistrationNumber(String registrationNumber) {
-        return studentRepository.findByRegistrationNumber(registrationNumber)
-                .orElseThrow(() -> new StudentNotFoundException("Student not found with registration number: " + registrationNumber));
-    }
-
-    @Override
-    @Transactional
-    public Student createStudent(PaymentFormDTO paymentForm) {
-        Student student = new Student();
+    private void updateStudentFromForm(Student student, PaymentFormDTO paymentForm) {
         student.setName(paymentForm.getFirstName() + " " + paymentForm.getLastName());
         student.setEmail(paymentForm.getEmail());
         student.setPhoneNumber(paymentForm.getPhoneNumber());
@@ -67,7 +85,5 @@ public class StudentServiceImpl implements StudentService {
         student.setProgram(program);
         student.setLevel(level);
         student.setAcademicYear(academicYear);
-
-        return createOrUpdateStudent(student);
     }
 }

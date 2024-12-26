@@ -42,12 +42,7 @@ public class InvoiceServiceImpl implements InvoiceService {
     public Invoice generateInvoice(PaymentFormDTO paymentForm) {
         logger.info("Generating invoice for student: {}", paymentForm.getEmail());
 
-        Student student;
-        try {
-            student = studentService.findStudentByRegistrationNumber(paymentForm.getRegistrationNumber());
-        } catch (StudentNotFoundException e) {
-            student = studentService.createStudent(paymentForm);
-        }
+        Student student = studentService.handleStudentRegistration(paymentForm);
 
         Invoice invoice = new Invoice();
         invoice.setInvoiceNumber(numberGenerator.generateInvoiceNumber());

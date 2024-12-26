@@ -5,11 +5,6 @@ import com.nacosfunaabpay.paymentplatform.model.Student;
 
 public interface StudentService {
 
-    Student createOrUpdateStudent(Student student);
+    Student handleStudentRegistration(PaymentFormDTO paymentForm);
 
-    Student findStudentByEmail(String email);
-
-    Student findStudentByRegistrationNumber(String registrationNumber);
-
-    Student createStudent(PaymentFormDTO paymentForm);
 }
