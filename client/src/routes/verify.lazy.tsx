@@ -1,3 +1,4 @@
+import { toast } from "@/hooks/use-toast"
 import { apiClient } from "@/lib/api"
 import usePaymentStore from "@/lib/store/use-payment-store"
 import { createLazyFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
@@ -32,12 +33,15 @@ function VerifyPage() {
             // Replace with your actual backend API endpoint
             const res = await apiClient.get(
                 `/payments/verify?transaction_id=${transactionId}&trx_ref=${txRef}`
-                // `http://18.175.120.168:8443/api/v1/payments/verify?transaction_id=${transactionId}&invoice_id=${txRef}`
             )
 
             if (res.status === HttpStatusCode.Ok) {
                 setPayment(res.data)
                 navigate({ to: "/success" })
+                toast({
+                    title: "Payment Successful!",
+                    description: "Your payment has been processed successfully.",
+                })
             } else {
                 throw new Error("Transaction verifiction failed")
             }
@@ -51,7 +55,9 @@ function VerifyPage() {
             <div className="flex flex-col items-center gap-6">
                 <div className="loader"></div>
 
-                <h1 className="text-2xl text-white/80 text-center">Verifying...</h1>
+                <h1 className="text-2xl text-white/80 text-center">
+                    Please wait, while we verify your payment...
+                </h1>
             </div>
         </div>
     )

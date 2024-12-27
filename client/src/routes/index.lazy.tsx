@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { HttpStatusCode } from "axios"
+import { AxiosError, HttpStatusCode } from "axios"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { createLazyFileRoute, useNavigate } from "@tanstack/react-router"
@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button"
 import useInvoiceStore from "@/lib/store/useInvoiceStore"
 import { apiClient } from "@/lib/api"
 import { LEVELS, PROGRAMS } from "@/lib/data"
+import { useToast } from "@/hooks/use-toast"
 
 export const Route = createLazyFileRoute("/")({
     component: Index,
@@ -33,6 +34,7 @@ export const Route = createLazyFileRoute("/")({
 function Index() {
     const navigate = useNavigate({ from: "/" })
     const { setInvoice } = useInvoiceStore()
+    const { toast } = useToast()
 
     const form = useForm<z.infer<typeof userFormSchema>>({
         resolver: zodResolver(userFormSchema),
@@ -65,8 +67,12 @@ function Index() {
                     navigate({ to: "/invoice", params: { invoiceId } })
                 }
             })
-            .catch((err) => {
+            .catch((err: AxiosError) => {
                 console.log("[ERROR]: ", err)
+                toast({
+                    variant: "destructive",
+                    description: err.message,
+                })
             })
     }
 

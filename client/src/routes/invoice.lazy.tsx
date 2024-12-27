@@ -28,6 +28,7 @@ import useInvoiceStore from "@/lib/store/useInvoiceStore"
 import { formatDate } from "@/lib/utils"
 import { apiClient } from "@/lib/api"
 import { usePDFDownload } from "@/hooks/use-pdf-download"
+import { toast } from "@/hooks/use-toast"
 
 export const Route = createLazyFileRoute("/invoice")({
     component: InvoicePage,
@@ -37,6 +38,7 @@ function InvoicePage() {
     const { invoice } = useInvoiceStore()
     const { downloading, downloadPDF } = usePDFDownload()
 
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const [isSubmitLoading, setIsSubmitLoading] = useState(false)
 
     const firstName = invoice?.student.name.split(" ")[0] as string
@@ -68,13 +70,20 @@ function InvoicePage() {
         apiClient
             .post(`/payments/initialize?invoice_no=${invoice?.invoiceNumber}`)
             .then((res) => {
-                console.log(res)
+                setIsModalOpen(true)
+
                 const paymentGatewayUrl = res.data?.paymentUrl
                 if (res.status === HttpStatusCode.Ok) window.location.href = paymentGatewayUrl
                 setIsSubmitLoading(false)
             })
             .catch((err) => {
                 console.log("[ERROR]: ", err)
+                toast({
+                    variant: "destructive",
+                    title: "Oops! Something went wrong",
+                    description:
+                        "It seems we ran into some issues initalizing your payment. Please try again later or contact support if the problem persists.",
+                })
             })
             .finally(() => setIsSubmitLoading(false))
     }
@@ -92,7 +101,9 @@ function InvoicePage() {
             <div className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 pointer-events-none"></div>
 
             {/* INVOICE PAGE */}
-            <div className="fixed inset-3.5 z-50 rounded-lg border-4 border-white/15 bg-white p-6 md:w-[70vw] lg:w-[50vw] md:left-auto md:right-8 md:top-3 md:bottom-3">
+            <div
+                className={`${isModalOpen ? "z-30" : "z-50"} fixed inset-3.5 rounded-lg border-4 border-white/15 bg-white p-6 md:w-[70vw] lg:w-[50vw] md:left-auto md:right-8 md:top-3 md:bottom-3`}
+            >
                 <div className="flex items-center justify-between">
                     <div className="p-1 space-y-2">
                         <p className="font-medium text-sm text-black/50 md:text-base lg:text-lg">
@@ -279,6 +290,14 @@ function InvoicePage() {
                     </Button>
                 </div>
             </div>
+
+            {isModalOpen && (
+                <div className="grid place-items-center h-svh">
+                    <h1 className="absolute z-50 font-bold text-white m-autotext-center">
+                        Redirecting you to our payment provider...
+                    </h1>
+                </div>
+            )}
 
             <main className="md:flex px-4 pt-11 pb-6 justify-evenly md:px-36 md:pt-24">
                 <div className="md:flex flex-col justify-between mb-6">

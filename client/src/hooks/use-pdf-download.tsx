@@ -1,6 +1,7 @@
 import { useState } from "react"
 
 import { apiClient } from "@/lib/api"
+import { toast } from "./use-toast"
 
 type DownloadPDFProps = {
     type: "invoice" | "receipt"
@@ -41,10 +42,18 @@ export const usePDFDownload = (): UsePDFDownloadReturn => {
             link.parentNode?.removeChild(link)
             window.URL.revokeObjectURL(url)
 
-            // TODO: add toast on success & failure
+            toast({
+                title: "PDF Generated Successfully",
+                description: `Your ${type == "invoice" ? "invoice" : "receipt"} has been downloaded successfully.`,
+            })
         } catch (error) {
             setError("Error downloading PDF. Please try again.")
-            console.error("PDF download error:", error)
+            console.error("PDF Generation Failed:", error)
+            toast({
+                variant: "destructive",
+                title: "PDF Download Error",
+                description: `We couldn't generate your ${type == "invoice" ? "invoice" : "receipt"} PDF right now. Please try again later.`,
+            })
         } finally {
             setDownloading(false)
         }

@@ -1,11 +1,22 @@
 import { Button } from "@/components/ui/button"
+import { toast } from "@/hooks/use-toast"
 import { createFileRoute } from "@tanstack/react-router"
+import { useEffect } from "react"
 
 export const Route = createFileRoute("/verify-error")({
     component: ErrorPage,
 })
 
 function ErrorPage() {
+    useEffect(() => {
+        toast({
+            variant: "destructive",
+            title: "Payment Verification Unsuccessful",
+            description:
+                "We ran into some issues verifying your payment. Please try again later or contact support if the problem persists.",
+        })
+    }, [])
+
     return (
         <main className="flex flex-col h-[90svh] justify-between md:h-auto md:justify-evenly md:flex-row px-4 pt-11 pb-6 md:px-36 md:pt-24">
             <div className="hidden md:flex flex-col justify-between mb-6">
