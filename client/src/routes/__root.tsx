@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/toaster"
 import { createRootRoute, Outlet } from "@tanstack/react-router"
 
 export const Route = createRootRoute({
@@ -8,6 +9,8 @@ export const Route = createRootRoute({
             <footer className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs max-w-[90vw] text-center text-white/40">
                 Designed by <em>Temi Akinbote</em>& <em>Developed by David Enikuomehin</em>
             </footer>
+
+            <Toaster />
         </div>
     ),
 })
