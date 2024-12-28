@@ -20,11 +20,11 @@ function ErrorPage() {
     return (
         <main className="flex flex-col h-[90svh] justify-between md:h-auto md:justify-evenly md:flex-row px-4 pt-11 pb-6 md:px-36 md:pt-24">
             <div className="hidden md:flex flex-col justify-between mb-6">
-                <div className="space-y-2 md:space-y-0 text-center md:text-justify px-3 text-white max-w-[482px]">
+                <div className="space-y-2 md:space-y-4 text-center md:text-justify px-3 text-white max-w-[482px]">
                     <h1 className="font-bold text-xl md:text-4xl tracking-tighter uppercase">
                         Hello there! Pay Your NACOS Dues Easily and Securely here
                     </h1>
-                    <p className="text-sm md:text-xl md:font-medium">
+                    <p className="text-sm md:text-xl text-white/70">
                         Welcome to the official payment portal for NACOS dues. Kindly provide
                         accurate information to ensure a successful payment.
                     </p>
