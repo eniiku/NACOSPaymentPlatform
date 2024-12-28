@@ -29,6 +29,7 @@ import { formatDate } from "@/lib/utils"
 import { apiClient } from "@/lib/api"
 import { usePDFDownload } from "@/hooks/use-pdf-download"
 import { toast } from "@/hooks/use-toast"
+import { PROGRAMS, LEVELS } from "@/lib/data"
 
 export const Route = createLazyFileRoute("/invoice")({
     component: InvoicePage,
@@ -98,11 +99,11 @@ function InvoicePage() {
     return (
         <>
             {/* OVERLAY */}
-            <div className="fixed inset-0 z-50 bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 pointer-events-none"></div>
+            <div className="fixed inset-0 z-50 bg-black/20 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 pointer-events-none"></div>
 
             {/* INVOICE PAGE */}
             <div
-                className={`${isModalOpen ? "z-30" : "z-50"} fixed inset-3.5 rounded-lg border-4 border-white/15 bg-white p-6 md:w-[70vw] lg:w-[50vw] md:left-auto md:right-8 md:top-3 md:bottom-3`}
+                className={`${isModalOpen ? "z-30" : "z-50"} mb-10 sm:mb-0 absolute h-fit sm:h-auto inset-3.5 rounded-lg lg:border-[12px] border-white/30 bg-white p-6 md:w-[90vw] lg:w-[70vw] xl:w-[60vw] md:left-auto md:right-8 md:top-3 md:bottom-3`}
             >
                 <div className="flex items-center justify-between">
                     <div className="p-1 space-y-2">
@@ -116,6 +117,31 @@ function InvoicePage() {
                     </div>
 
                     <img src="/logo.svg" width={48} height={48} alt="" />
+                </div>
+
+                {/* Alterations warning */}
+                <div className="hidden lg:flex border border-[#E4E7EC] rounded my-5 relative overflow-hidden z-10">
+                    {/* Line Indicator */}
+                    <div className="block h-full w-1.5 bg-yellow-700 rounded-tr rounded-br"></div>
+                    <div className="absolute left-0 top-0 bottom-0 h-[100px] w-1.5 bg-amber-500"></div>
+
+                    <div className="flex gap-3 px-4 py-3">
+                        <div className="border border-[#FBE2B7] rounded w-6 h-6 bg-[#FEF6E7] flex items-center justify-center">
+                            <ExclamationTriangleIcon
+                                width={14}
+                                height={14}
+                                className="text-amber-500"
+                            />
+                        </div>
+                        <div className="text-sm space-y-0.5">
+                            <h5 className="font-semibold text-black/80">Please Note:</h5>
+                            <p className="text-[#475367]">
+                                Due to NIBSS fluctuating downtime at the moment, there might be
+                                slight delay in payment confirmation for both CARD & Bank Transfer,
+                                please bear with us!
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="grid grid-cols-2 pt-3">
@@ -272,7 +298,7 @@ function InvoicePage() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="space-y-3 lg:mt-16 flex gap-3 items-center md:space-y-0">
+                <div className="space-y-3 lg:mt-16 sm:flex gap-3 items-center md:space-y-0">
                     <Button
                         disabled={isSubmitLoading}
                         onClick={onSubmit}
@@ -299,19 +325,19 @@ function InvoicePage() {
                 </div>
             )}
 
-            <main className="md:flex px-4 pt-11 pb-6 justify-evenly md:px-36 md:pt-24">
-                <div className="md:flex flex-col justify-between mb-6">
-                    <div className="space-y-2 md:space-y-4 text-center md:text-justify px-3 text-white max-w-[482px]">
+            <main className="lg:flex gap-4 px-4 pt-11 pb-6 justify-evenly md:px-12 md:py-16 xl:px-36 lg:pt-24">
+                <div className="lg:flex flex-col justify-between mb-6">
+                    <div className="space-y-2 md:space-y-4 text-center lg:text-justify px-3 text-white max-w-[560px] lg:max-w-[482px] mx-auto">
                         <h1 className="font-bold text-xl md:text-4xl tracking-tighter uppercase">
                             Hello there! Pay Your NACOS Dues Easily and Securely here
                         </h1>
-                        <p className="text-sm md:text-xl text-white/70">
+                        <p className="text-sm  text-justify lg:text-left md:text-xl text-white/70">
                             Welcome to the official payment portal for NACOS dues. Kindly provide
                             accurate information to ensure a successful payment.
                         </p>
                     </div>
 
-                    <div className="hidden md:flex items-center text-white gap-3">
+                    <div className="hidden lg:flex items-center text-white gap-3">
                         {/* TODO: create optimized image component */}
                         <img
                             src="/logo.svg"
@@ -333,7 +359,7 @@ function InvoicePage() {
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
-                        className="w-full bg-white border-4 border-white/15 p-3 max-w-[520px] rounded-md space-y-6"
+                        className="w-full bg-white border-4 border-white/15 p-3 md:mx-auto max-w-[520px] rounded-md space-y-6"
                     >
                         <div className="space-y-3 md:space-y-4">
                             <div className="md:flex gap-4">
@@ -412,6 +438,38 @@ function InvoicePage() {
 
                             <FormField
                                 control={form.control}
+                                name="program"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Select
+                                                onValueChange={field.onChange}
+                                                defaultValue={field.value}
+                                            >
+                                                <SelectTrigger className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium">
+                                                    <SelectValue placeholder="Select Program" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {PROGRAMS.map((program) => (
+                                                        <SelectItem
+                                                            key={program.key}
+                                                            value={program.key}
+                                                            className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                        >
+                                                            {program.name}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </FormControl>
+                                        <FormDescription />
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
                                 name="level"
                                 render={({ field }) => (
                                     <FormItem>
@@ -421,40 +479,18 @@ function InvoicePage() {
                                                 defaultValue={field.value}
                                             >
                                                 <SelectTrigger className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium">
-                                                    <SelectValue placeholder="Level" />
+                                                    <SelectValue placeholder="Select Level" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    <SelectItem
-                                                        value="1"
-                                                        className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                    >
-                                                        100 LEVEL
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="2"
-                                                        className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                    >
-                                                        200 LEVEL
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        // value="DE"
-                                                        value="3"
-                                                        className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                    >
-                                                        DIRECT ENTRY
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="4"
-                                                        className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                    >
-                                                        300 LEVEL
-                                                    </SelectItem>
-                                                    <SelectItem
-                                                        value="5"
-                                                        className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                    >
-                                                        400 LEVEL
-                                                    </SelectItem>
+                                                    {LEVELS.map((level) => (
+                                                        <SelectItem
+                                                            key={level.key}
+                                                            value={level.key}
+                                                            className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium uppercase"
+                                                        >
+                                                            {level.name}
+                                                        </SelectItem>
+                                                    ))}
                                                 </SelectContent>
                                             </Select>
                                         </FormControl>
