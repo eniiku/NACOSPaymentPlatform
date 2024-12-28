@@ -108,3 +108,49 @@
         transform: rotate(1turn);
     }
 }
+
+.stamped-border {
+    --r: 10px; /* control the radius */
+    --mask: radial-gradient(var(--r) at bottom, #0000 97%, #000) calc(-1.5 * var(--r)) /
+            calc(3 * var(--r)) 100%,
+        linear-gradient(#000 0 0) no-repeat 50% / calc(100% - 3 * var(--r))
+            calc(100% - 3 * var(--r));
+
+    -webkit-mask: var(--mask);
+    mask: var(--mask);
+    mix-blend-mode: screen;
+}
+
+.stamped-border::before,
+.stamped-border::after {
+    content: "";
+    position: absolute;
+    z-index: 100;
+    top: 42.6%;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: black;
+}
+
+.stamped-border::before {
+    left: -12px;
+}
+
+.stamped-border::after {
+    right: -12px;
+}
+
+/* HTML: <div class="rounded-dashes"></div> */
+.rounded-dashes {
+    --s: 2px; /* control the size */
+    --c: #bbbbbb; /* the color */
+
+    height: var(--s);
+    width: 100%;
+    --_g: var(--s) top 50%, var(--c) calc(100% - 5px), #0000;
+    background: 0 / calc(10 * var(--s)) space no-repeat;
+    background-image: radial-gradient(circle closest-side at left var(--_g)),
+        radial-gradient(circle closest-side at right var(--_g)),
+        linear-gradient(90deg, #0000 25%, var(--c) 0 75%, #0000 0);
+}

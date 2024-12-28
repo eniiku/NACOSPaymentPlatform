@@ -53,7 +53,7 @@ function SuccessPage() {
                 </div>
             </div>
 
-            <section className="bg-white rounded-xl py-7 px-3 w-full md:max-w-[400px]">
+            <section className="bg-white rounded-xl py-7 px-3 w-full md:max-w-[400px] stamped-border relative z-10">
                 <div className="space-y-6">
                     <img
                         src="/circle-check.svg"
@@ -75,7 +75,9 @@ function SuccessPage() {
                     </div>
                 </div>
 
-                <div className="w-full h-[1px] border-[0.5px] border-dashed border-[#BBBBBB] my-9"></div>
+                {/* border decorator */}
+
+                <div className="w-full h-[1px] my-10 rounded-dashes"></div>
 
                 <div>
                     <h4 className="font-semibold text-sm">Your NACOS Due Payment Details</h4>
