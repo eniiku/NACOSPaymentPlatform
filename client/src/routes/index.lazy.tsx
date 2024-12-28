@@ -54,7 +54,6 @@ function Index() {
         //TODO: I THINK THE BACKEND IS FETCHING THE DETAILS PER MATRIC NUMBER. RESTRICT THAT
         apiClient
             .post("/invoices", {
-                // .post("http://18.175.120.168:8443/api/v1/invoices", {
                 email: values.emailAddress,
                 phoneNumber: values.phoneNo,
                 registrationNumber: values.registrationNo,
@@ -71,6 +70,7 @@ function Index() {
                 console.log("[ERROR]: ", err)
                 toast({
                     variant: "destructive",
+                    title: "Oops! Something went wrong",
                     description: err.message,
                 })
             })
