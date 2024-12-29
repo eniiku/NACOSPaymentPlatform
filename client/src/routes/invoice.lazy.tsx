@@ -99,11 +99,13 @@ function InvoicePage() {
     return (
         <>
             {/* OVERLAY */}
-            <div className="fixed inset-0 z-50 bg-black/20 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 pointer-events-none"></div>
+            <div
+                className={` ${isModalOpen ? "bg-black/70" : "bg-black/20"} fixed inset-0 z-50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 pointer-events-none`}
+            ></div>
 
             {/* INVOICE PAGE */}
             <div
-                className={`${isModalOpen ? "z-30" : "z-50"} mb-10 sm:mb-0 absolute h-fit sm:h-auto inset-3.5 rounded-lg lg:border-[12px] border-white/30 bg-white p-6 md:w-[90vw] lg:w-[70vw] xl:w-[60vw] md:left-auto md:right-8 md:top-3 md:bottom-3`}
+                className={`${isModalOpen ? "z-30" : "z-50"} sm:mb-0 sm:absolute inset-3.5 rounded-lg lg:border-[12px] border-white/30 bg-white p-6 md:w-[90vw] lg:w-[70vw] xl:w-[60vw] md:left-auto md:right-8 md:top-3 md:bottom-3`}
             >
                 <div className="flex items-center justify-between">
                     <div className="p-1 space-y-2">
@@ -120,10 +122,10 @@ function InvoicePage() {
                 </div>
 
                 {/* Alterations warning */}
-                <div className="hidden lg:flex border border-[#E4E7EC] rounded my-5 relative overflow-hidden z-10">
+                <div className="flex border border-[#E4E7EC] rounded my-5 relative overflow-hidden z-10">
                     {/* Line Indicator */}
                     <div className="block h-full w-1.5 bg-yellow-700 rounded-tr rounded-br"></div>
-                    <div className="absolute left-0 top-0 bottom-0 h-[100px] w-1.5 bg-amber-500"></div>
+                    <div className="absolute left-0 top-0 bottom-0 h-full w-1.5 bg-amber-500"></div>
 
                     <div className="flex gap-3 px-4 py-3">
                         <div className="border border-[#FBE2B7] rounded w-6 h-6 bg-[#FEF6E7] flex items-center justify-center">
@@ -278,7 +280,7 @@ function InvoicePage() {
                 <div className="flex border border-[#E4E7EC] rounded my-5 relative overflow-hidden z-10">
                     {/* Line Indicator */}
                     <div className="block h-full w-1.5 bg-yellow-700 rounded-tr rounded-br"></div>
-                    <div className="absolute left-0 top-0 bottom-0 h-[100px] w-1.5 bg-amber-500"></div>
+                    <div className="absolute left-0 top-0 bottom-0 h-full w-1.5 bg-amber-500"></div>
 
                     <div className="flex gap-3 px-4 py-3">
                         <div className="border border-[#FBE2B7] rounded w-6 h-6 bg-[#FEF6E7] flex items-center justify-center">
@@ -318,14 +320,14 @@ function InvoicePage() {
             </div>
 
             {isModalOpen && (
-                <div className="grid place-items-center h-svh">
-                    <h1 className="absolute z-50 font-bold text-white m-autotext-center">
+                <div className="fixed inset-0 z-50 grid place-items-center h-svh">
+                    <h1 className="font-bold text-white lg:text-xl text-center">
                         Redirecting you to our payment provider...
                     </h1>
                 </div>
             )}
 
-            <main className="lg:flex gap-4 px-4 pt-11 pb-6 justify-evenly md:px-12 md:py-16 xl:px-36 lg:pt-24">
+            <main className="hidden sm:block lg:flex gap-4 px-4 pt-11 pb-6 justify-evenly md:px-12 md:py-16 xl:px-36 lg:pt-24">
                 <div className="lg:flex flex-col justify-between mb-6">
                     <div className="space-y-2 md:space-y-4 text-center lg:text-justify px-3 text-white max-w-[560px] lg:max-w-[482px] mx-auto">
                         <h1 className="font-bold text-xl md:text-4xl tracking-tighter uppercase">
