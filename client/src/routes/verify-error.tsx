@@ -18,7 +18,7 @@ function ErrorPage() {
     }, [])
 
     return (
-        <main className="md:flex gap-4 flex-col h-[90svh] justify-between md:h-auto md:justify-evenly md:flex-row px-4 pt-11 pb-6 md:px-12 md:py-16 xl:px-36 md:pt-24">
+        <main className="md:flex gap-4 flex-col min-h-[90svh] justify-between md:h-auto md:justify-evenly md:flex-row px-4 pt-11 pb-6 md:px-12 md:py-16 xl:px-36 md:pt-24">
             <div className="lg:flex flex-col justify-between mb-6">
                 <div className="space-y-2 md:space-y-4 text-center lg:text-justify md:text-left px-3 text-white max-w-[560px] lg:max-w-[482px] mx-auto">
                     <h1 className="font-bold text-xl md:text-4xl tracking-tighter uppercase">
@@ -49,7 +49,7 @@ function ErrorPage() {
                 </div>
             </div>
 
-            <section className="bg-white rounded-xl py-24 px-6 w-full md:max-w-[340px]">
+            <section className="bg-white rounded-xl py-24 px-6 h-fit w-full md:max-w-[340px]">
                 <div className="space-y-5">
                     <img src="/cloud-cross.svg" width={66} height={66} alt="" className="mx-auto" />
 
@@ -61,8 +61,11 @@ function ErrorPage() {
                         <p className="text-base text-black/60">Please try again</p>
                     </div>
 
-                    <Button className="h-auto py-[18px] w-full bg-custom-green hover:bg-custom-green/95 text-white font-bold text-base">
-                        Try Again
+                    <Button
+                        className="h-auto py-[18px] w-full bg-custom-green hover:bg-custom-green/95 text-white font-bold text-base"
+                        asChild
+                    >
+                        <a href="/">Try Again</a>
                     </Button>
                 </div>
             </section>

@@ -25,6 +25,8 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
 
     private final TemplateEngine templateEngine;
 
+    private static final String LOGO_URL = "https://nacosfunaabpay.tech/logo.png";
+
     public PdfGenerationServiceImpl(TemplateEngine templateEngine) {
         this.templateEngine = templateEngine;
     }
@@ -33,9 +35,7 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
         try {
             logger.info("Generating PDF from template: {}", templateName);
 
-            ClassPathResource resource = new ClassPathResource("static/images/logo.png");
-            String logoPath = resource.getFile().getAbsolutePath();
-            context.setVariable("logoSrc", "file:///" + logoPath);
+            context.setVariable("logoSrc", LOGO_URL);
 
             String htmlContent = templateEngine.process(String.valueOf(new ClassPath("pdf/" + templateName)), context);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
