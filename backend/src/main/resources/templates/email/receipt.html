@@ -7,16 +7,16 @@
 <body>
 <h1>Receipt for NACOS Payment</h1>
 
-<p>Dear <span th:text="${student.name}"></span>,</p>
+<p>Dear <span th:text="${receipt.payment.student.name}"></span>,</p>
 <p>Thank you for your payment. Here are the details of your receipt:</p>
 
 <ul>
     <li>Receipt Number: <span th:text="${receipt.receiptNumber}"></span></li>
-    <li>Amount Paid: ₦<span th:text="${payment.amountPaid}"></span></li>
-    <li>Payment Date: <span th:text="${#temporals.format(payment.paymentDate, 'dd-MM-yyyy HH:mm')}"></span></li>
-    <li>Payment Method: <span th:text="${payment.paymentMethod}"></span></li>
-    <li>Transaction Reference: <span th:text="${payment.transactionReference}"></span></li>
-    <li>Invoice Number: <span th:text="${invoice.id}"></span></li>
+    <li>Amount Paid: ₦<span th:text="${receipt.payment.amountPaid}"></span></li>
+    <li>Payment Date: <span th:text="${#temporals.format(receipt.payment.paymentDate, 'dd-MM-yyyy HH:mm')}"></span></li>
+    <li>Payment Method: <span th:text="${receipt.payment.paymentMethod}"></span></li>
+    <li>Transaction Reference: <span th:text="${receipt.payment.transactionReference}"></span></li>
+    <li>Invoice Number: <span th:text="${receipt.payment.invoice.id}"></span></li>
 </ul>
 
 <p>This receipt confirms that your payment has been successfully processed.</p>

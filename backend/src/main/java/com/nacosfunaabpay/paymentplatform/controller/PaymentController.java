@@ -62,7 +62,7 @@ public class PaymentController {
 
             logger.debug("Sending invoice email for invoice number: {}", invoiceNo);
             try {
-                invoiceService.sendInvoiceEmail(invoiceNo);
+                invoiceService.sendInvoiceEmail(invoice);
             } catch (Exception e) {
                 logger.warn("Email sending failed but continuing with payment initialization: {}", e.getMessage());
             }
@@ -112,7 +112,7 @@ public class PaymentController {
 
                 // Generate receipt and send email
                 Receipt receipt = receiptService.generateReceipt(payment);
-                receiptService.sendReceiptEmail(receipt.getId());
+                receiptService.sendReceiptEmail(receipt);
                 response.setReceipt(receiptMapper.mapTo(receipt));
 
                 return ResponseEntity.ok(response);

@@ -6,96 +6,91 @@
     <meta name="viewport" content="width=device-width" />
     <title th:text="${title}" />
     <style type="text/css">
-        html {
-            font-family: Arial, sans-serif;
-            font-size: 16px;
-            width: 565px;
-            height: 774px;
+        @page {
+            size: A4 portrait;
+            margin: 0;
         }
 
-        body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 16pt;
             margin: 0;
-            padding: 0;
-            font-weight: normal;
+            padding: 10mm;
+            border-top: 8pt solid #138C01;
+            border-bottom: 8pt solid #138C01;
         }
 
         ol, ul {
             list-style: none;
         }
 
-        body {
-            height: 774px;
-            padding: 24px 32px;
-            border-top: 8px solid #138C01;
-            border-bottom: 8px solid #138C01;
-        }
-
         /* Header Styles */
-        .page__header {
+        .header {
+            display: block;
             width: 100%;
-            margin-bottom: 32px;
-        }
-
-        .header-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .header-logo {
-            width: 48px;
-            height: 48px;
         }
 
         .header-title {
-            display: inline-block;
+            float: left;
+            width: 60%;
+            position: relative;
+        }
+
+        .logo {
+            float: left;
+            margin-right: 8pt;
+            width: 48pt;
+            height: 48pt;
+        }
+
+        .header-title h3 {
             color: #138C01;
-            font-size: 14px;
-            line-height: 18px;
-            letter-spacing: -0.32px;
-            font-weight: bold;
-            max-width: 212px;
-            padding-left: 8px;
+            font-size: 14pt;
+            font-weight: 600;
+            margin: 0;
+            padding-left: 56pt; /* logo width + margin */
         }
 
         .header-contact {
+            float: right;
+            width: 40%;
             text-align: right;
-            font-size: 10px;
-            line-height: 14px;
+            font-size: 10pt;
             color: #5E6470;
         }
 
         /* Main Content Styles */
         .main-section {
-            margin-top: 32px;
+            margin-top: 32pt;
         }
 
         .customer-info {
             width: 100%;
-            margin-bottom: 64px;
+            margin-bottom: 40pt;
         }
 
         .customer-name {
-            font-size: 12px;
+            font-size: 12pt;
             font-weight: 600;
             color: #1A1C21;
-            margin-bottom: 6px;
+            margin-bottom: 6pt;
         }
 
         .customer-details {
-            font-size: 10px;
-            line-height: 14px;
+            font-size: 10pt;
+            line-height: 14pt;
             color: #5E6470;
         }
 
         .receipt-header {
-            font-size: 20px;
+            font-size: 20pt;
             font-weight: bold;
             color: #138C01;
             text-align: right;
         }
 
         .receipt-number {
-            font-size: 10px;
+            font-size: 10pt;
             color: #5E6470;
             text-align: right;
         }
@@ -103,25 +98,24 @@
         /* Payment Details Table */
         .payment-table {
             width: 100%;
-            border: 1px solid #D7DAE0;
+            border: 1pt solid #D7DAE0;
             border-collapse: collapse;
-            margin-top: 32px;
         }
 
         .payment-table th, .payment-table td {
-            padding: 12px;
-            border-bottom: 1px solid #D7DAE0;
+            padding: 12pt;
+            border-bottom: 1pt solid #D7DAE0;
         }
 
         .payment-table th {
-            font-size: 10px;
+            font-size: 10pt;
             color: #5E6470;
             font-weight: normal;
             text-align: left;
         }
 
         .payment-table td {
-            font-size: 10px;
+            font-size: 10pt;
             color: #1A1C21;
         }
 
@@ -131,68 +125,74 @@
 
         .total-row td {
             font-weight: bold;
-            font-size: 14px;
+            font-size: 14pt;
         }
 
         /* Footer Styles */
         .footer-section {
-            margin-top: 64px;
+            margin-top: 64pt;
             text-align: right;
+            margin-bottom: 5cm;
         }
 
         .stamp-line {
-            width: 200px;
-            border-top: 1px solid #000000;
+            width: 200pt;
+            border-top: 1pt solid #000000;
             margin-left: auto;
-            margin-bottom: 8px;
+            margin-bottom: 8pt;
         }
 
         .stamp-text {
-            font-size: 14px;
+            font-size: 14pt;
             font-weight: 600;
             color: #1A1C21;
         }
 
         .print-date {
-            font-size: 10px;
+            font-size: 10pt;
             color: #5E6470;
-            margin-top: 32px;
+            margin-top: 32pt;
             text-align: center;
+        }
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        .my-1 {
+            margin: 0.1cm 0;
         }
     </style>
 </head>
 <body class="page">
-<div class="page__header">
-    <table class="header-table">
-        <tr>
-            <td style="width: 60%; display: flex; align-items: center;">
-                <img src="assets/logo.svg" th:src="@{assets/logo.svg}" width="48" height="48" alt="" class="header-logo"/>
-
-                <span class="header-title">Nigerian Association Of Computing Students, FUNAAB</span>
-            </td>
-            <td style="width: 40%;" class="header-contact">
-                <div>https://nacosfunaabpay.com.ng</div>
-                <div>support@nacosfunaabpay.com.ng</div>
-                <div>09155104851</div>
-            </td>
-        </tr>
-    </table>
+<div class="header clearfix">
+    <div class="header-title">
+        <img th:src="${logoSrc}" width="48" height="48" alt="" class="logo"/>
+        <h3>Nigerian Association Of <span style="display: block;"></span> Computing Students, FUNAAB</h3>
+    </div>
+    <div class="header-contact">
+        <div class="my-1">https://nacosfunaabpay.com.ng</div>
+        <div class="my-1">support@nacosfunaabpay.com.ng</div>
+        <div class="my-1">09155104851</div>
+    </div>
 </div>
 
 <div class="main-section">
     <table class="customer-info">
         <tr>
             <td style="width: 60%;">
-                <div th:text="${receipt.payment.student.name}" class="customer-name" />
+                <div style="margin-bottom: 3mm;" th:text="${receipt.payment.student.name}" class="customer-name" >David</div>
                 <div class="customer-details">
-                    <div>Matric No: <span th:text="${receipt.payment.student.registrationNumber}" /></div>
-                    <div>Department: <span th:text="${receipt.payment.student.program.name}"/> (<span th:text="${receipt.payment.student.level.name}"/>)</div>
-                    <div>Email Address: <span th:text="${receipt.payment.student.email}" /></div>
+                    <div class="my-1">Matric No: <span th:text="${receipt.payment.student.registrationNumber}" /></div>
+                    <div class="my-1">Department: <span th:text="${receipt.payment.student.program.name}"/> (<span th:text="${receipt.payment.student.level.name}"/>)</div>
+                    <div class="my-1">Email Address: <span th:text="${receipt.payment.student.email}" /></div>
                     <div>Phone Number: <span th:text="${receipt.payment.student.phoneNumber}" /></div>
                 </div>
             </td>
             <td style="width: 40%;" align="right">
-                <div class="receipt-header">NACOS RECEIPT</div>
+                <div class="receipt-header" style="margin-bottom: 2mm;">NACOS RECEIPT</div>
                 <div class="receipt-number">Receipt No: <span th:text="${receipt.receiptNumber}" /></div>
             </td>
         </tr>
