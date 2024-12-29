@@ -30,7 +30,6 @@ public class PdfGenerationServiceImpl implements PdfGenerationService {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
             ITextRenderer renderer = new ITextRenderer();
-            renderer.getSharedContext().setDotsPerPixel(96);
             renderer.setDocumentFromString(htmlContent);
             renderer.layout();
             renderer.createPDF(outputStream);

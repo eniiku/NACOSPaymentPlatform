@@ -9,6 +9,8 @@
         html {
             font-family: Arial, sans-serif;
             font-size: 16px;
+            width: 565px;
+            height: 774px;
         }
 
         body, h1, h2, h3, h4, h5, h6, p, ol, ul {
@@ -164,7 +166,7 @@
     <table class="header-table">
         <tr>
             <td style="width: 60%; display: flex; align-items: center;">
-                <img src="https://nacosfunaabpay.tech/logo.svg" width="48" height="48" alt="" class="header-logo"/>
+                <img src="assets/logo.svg" th:src="@{assets/logo.svg}" width="48" height="48" alt="" class="header-logo"/>
 
                 <span class="header-title">Nigerian Association Of Computing Students, FUNAAB</span>
             </td>
@@ -189,8 +191,7 @@
                     <div>Phone Number: <span th:text="${receipt.payment.student.phoneNumber}" /></div>
                 </div>
             </td>
-
-            <td style="width: 40%; margin-top: auto;" align="right">
+            <td style="width: 40%;" align="right">
                 <div class="receipt-header">NACOS RECEIPT</div>
                 <div class="receipt-number">Receipt No: <span th:text="${receipt.receiptNumber}" /></div>
             </td>
