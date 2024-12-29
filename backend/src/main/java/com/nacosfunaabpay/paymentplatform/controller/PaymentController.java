@@ -3,7 +3,6 @@ package com.nacosfunaabpay.paymentplatform.controller;
 import com.nacosfunaabpay.paymentplatform.dtos.PaymentResponseDTO;
 import com.nacosfunaabpay.paymentplatform.dtos.PaymentVerificationResultDTO;
 import com.nacosfunaabpay.paymentplatform.dtos.ReceiptDTO;
-import com.nacosfunaabpay.paymentplatform.dtos.TransactionDetailsDTO;
 import com.nacosfunaabpay.paymentplatform.enums.InvoiceStatus;
 import com.nacosfunaabpay.paymentplatform.mappers.Mapper;
 import com.nacosfunaabpay.paymentplatform.model.Invoice;
@@ -50,11 +49,38 @@ public class PaymentController {
     ) {
 
         try {
+            logger.debug("Fetching invoice details for invoice number: {}", invoiceNo);
             Invoice invoice = invoiceService.getInvoiceByInvoiceNumber(invoiceNo);
-            invoiceService.sendInvoiceEmail(invoiceNo); // Send invoice to user's email asynchronously
+
+            if (invoice == null) {
+                logger.error("Invoice not found: {}", invoiceNo);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//                return ResponseEntity
+//                        .status(HttpStatus.NOT_FOUND)
+//                        .body(new ErrorResponse("Invoice not found", "No invoice found with number: " + invoiceNo));
+            }
+
+            logger.debug("Sending invoice email for invoice number: {}", invoiceNo);
+            try {
+                invoiceService.sendInvoiceEmail(invoiceNo);
+            } catch (Exception e) {
+                logger.warn("Email sending failed but continuing with payment initialization: {}", e.getMessage());
+            }
+
+            logger.debug("Initializing Flutterwave payment for invoice: {}", invoiceNo);
             String paymentGatewayUrl = flutterwaveService.initializePayment(invoice);
 
+            if (paymentGatewayUrl == null || paymentGatewayUrl.isEmpty()) {
+                logger.error("Payment gateway URL is null or empty for invoice: {}", invoiceNo);
+//                return ResponseEntity
+//                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                        .body(new ErrorResponse("Payment Gateway Error", "Failed to generate payment URL"));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+
             PaymentResponseDTO response = new PaymentResponseDTO(paymentGatewayUrl);
+            logger.info("Payment initialization successful for invoice: {}", invoiceNo);
+
             return ResponseEntity.ok(response);
         } catch (IOException e) {
             logger.error("Error initializing payment for invoice: {}", invoiceNo, e);
@@ -64,7 +90,7 @@ public class PaymentController {
 
     @GetMapping("/verify")
     public ResponseEntity<PaymentVerificationResultDTO> verifyPayment(@RequestParam("transaction_id") String transactionId,
-                                                                                          @RequestParam("trx_ref") String trxRef) {
+                                                                      @RequestParam("trx_ref") String trxRef) {
 
         String invoiceNo = trxRef.substring(0, trxRef.lastIndexOf('-'));
 
@@ -98,7 +124,7 @@ public class PaymentController {
         } catch (Exception e) {
             logger.error("Unexpected error during payment verification for invoice: {}", invoiceNo, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new PaymentVerificationResultDTO(false,null, "Unexpected error occurred", null));
+                    .body(new PaymentVerificationResultDTO(false, null, "Unexpected error occurred", null));
         }
     }
 }
