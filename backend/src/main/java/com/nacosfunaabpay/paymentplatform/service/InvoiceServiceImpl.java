@@ -79,8 +79,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Async("asyncExecutor")
-    public void sendInvoiceEmail(String invoiceNo) {
-        Invoice invoice = getInvoiceByInvoiceNumber(invoiceNo);
+    public void sendInvoiceEmail(Invoice invoice) {
         emailService.sendInvoiceEmail(invoice);
     }
 }

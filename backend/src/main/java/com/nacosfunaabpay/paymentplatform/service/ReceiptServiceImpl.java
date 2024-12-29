@@ -37,9 +37,7 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     @Async("asyncExecutor")
-    public void sendReceiptEmail(Long receiptId) {
-        Receipt receipt = receiptRepository.findById(receiptId)
-                .orElseThrow(() -> new RuntimeException("Receipt not found"));
+    public void sendReceiptEmail(Receipt receipt) {
         emailService.sendReceiptEmail(receipt);
     }
 }
