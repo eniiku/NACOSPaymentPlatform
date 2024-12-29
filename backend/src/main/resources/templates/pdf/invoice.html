@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}">Sample PDF</title>
+    <style type="text/css">
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            font-size: 16pt;
+            margin: 0;
+            padding: 10mm;
+            border-top: 8px solid #138C01;
+            border-bottom: 8px solid #138C01;
+        }
+
+        .header {
+            display: block;
+            width: 100%;
+        }
+
+        .header-title {
+            float: left;
+            width: 60%;
+            position: relative;
+        }
+
+        .logo {
+            float: left;
+            margin-right: 8px;
+            width: 48px;
+            height: 48px;
+        }
+
+        .header-title h3 {
+            color: #138C01;
+            font-size: 14pt;
+            font-weight: 600;
+            margin: 0;
+            padding-left: 56px; /* logo width + margin */
+        }
+
+        .header-contact {
+            float: right;
+            width: 40%;
+            text-align: right;
+            font-size: 10pt;
+            color: #5E6470;
+        }
+
+        .main-content {
+            clear: both;
+            margin-top: 1.6cm;
+        }
+
+        .billing-info {
+            float: left;
+            width: 43%;
+        }
+
+        .invoice-info {
+            float: left;
+            width: 24%;
+        }
+
+        .amount-info {
+            float: right;
+            width: 33%;
+            text-align: right;
+        }
+
+        .section-title {
+            font-size: 10pt;
+            color: #5E6470;
+            margin-bottom: 0.2cm;
+        }
+
+        .section-content {
+            font-size: 11pt;
+            color: #1A1C21;
+            font-weight: 600;
+        }
+
+        .section-content-2 {
+            font-size: 11pt;
+            color: #5E6470;
+        }
+
+        .amount {
+            font-size: 16pt;
+            color: #138C01;
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 1cm;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #ffffff;
+            border-top: 1px solid #D7DAE0;
+            border-bottom: 1px solid #D7DAE0;
+            padding: 0.4cm 0;
+            font-size: 9pt;
+            color: #5E6470;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 0.5cm 0;
+            font-size: 11pt;
+            color: #1A1C21;
+        }
+
+        .item-detail {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .total-row {
+            border-top: 1px solid #D7DAE0;
+            font-weight: 700;
+        }
+
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+
+        .my-1 {
+            margin: 0.1cm 0;
+        }
+    </style>
+</head>
+<body>
+<div class="header clearfix">
+    <div class="header-title">
+        <img th:src="${logoSrc}" width="48" height="48" alt="" class="logo"/>
+        <h3>Nigerian Association Of <span style="display: block;"></span> Computing Students, FUNAAB</h3>
+    </div>
+    <div class="header-contact">
+        <div>https://nacosfunaabpay.com.ng</div>
+        <div>support@nacosfunaabpay.com.ng</div>
+        <div>09155104851</div>
+    </div>
+</div>
+
+<div class="main-content clearfix">
+    <div class="billing-info">
+        <div class="section-title">Billed to</div>
+        <div class="section-content-2">
+            <div th:text="${invoice.student.name}" class="section-content my-1">Student Name</div>
+            <div th:text="${invoice.student.program.name}" class="my-1">Computer Science</div>
+            <div th:text="${invoice.student.level.name}" class="my-1">300 Level</div>
+            <div th:text="${invoice.student.email}">email@example.com</div>
+        </div>
+
+        <div class="section-title" style="margin-top: 1.7cm;">Subject</div>
+        <div class="section-content">NACOS DUES</div>
+    </div>
+
+    <div class="invoice-info">
+        <div class="section-title">Invoice Number</div>
+        <div class="section-content" th:text="${invoice.invoiceNumber}">#AB2324-01</div>
+
+        <div class="section-title" style="margin-top: 1cm;">Matric number</div>
+        <div class="section-content" th:text="${invoice.student.registrationNumber}">20223902</div>
+
+        <div class="section-title" style="margin-top: 1cm;">Invoice date</div>
+        <div class="section-content" th:text="${invoice.invoiceDate}">01 Aug, 2023</div>
+    </div>
+
+    <div class="amount-info">
+        <div class="section-title">Invoice of (NGN)</div>
+        <div class="amount" th:text="${invoice.amountDue}">NGN 3,100.00</div>
+
+        <div class="section-title" style="margin-top: 2.9cm;">Due date</div>
+        <div class="section-content" th:text="${invoice.dueDate}">15 Aug, 2024</div>
+    </div>
+</div>
+
+<table style="margin-bottom: 7cm;">
+    <thead>
+    <tr>
+        <th class="item-detail">Item Detail</th>
+        <th class="text-right">Qty</th>
+        <th class="text-right">Rate</th>
+        <th class="text-right">Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="item-detail">
+            <div class="section-content" style="margin-bottom: 0.2cm;">NACOS DUES</div>
+            <div class="section-title" style="margin-bottom: 0;">NACOS DUES</div>
+        </td>
+        <td class="text-right">1</td>
+        <td class="text-right">NGN 3,000.00</td>
+        <td class="text-right">NGN 3,000.00</td>
+    </tr>
+    <tr>
+        <td class="item-detail">
+            <div class="section-content" style="margin-bottom: 0.2cm;">Flutterwave Charges</div>
+            <div class="section-title" style="margin-bottom: 0;">Flutterwave Extra Charges</div>
+        </td>
+        <td class="text-right">1</td>
+        <td class="text-right">----</td>
+        <td class="text-right">----</td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr  style="font-weight: 500;">
+        <td colspan="2" class="total-row"></td>
+        <td class="total-row">Subtotal</td>
+        <td class="total-row text-right">NGN 3,100.00</td>
+    </tr>
+    <tr>
+        <td colspan="2"></td>
+        <td  class="total-row">Total</td>
+        <td class=" total-row text-right">NGN 3,100.00</td>
+    </tr>
+    </tfoot>
+</table>
+</body>
+</html>
