@@ -12,7 +12,7 @@ services:
             - MAIL_USERNAME=${MAIL_USERNAME}
             - DB_PASSWORD=${DB_PASSWORD}
             - DB_USERNAME=${DB_USERNAME}
-            - FRONTEND_DOMAIN_URL=http://frontend:80
+            - FRONTEND_DOMAIN_URL=${FRONTEND_DOMAIN_URL}
             - ALLOWED_CORS_ORIGINS=${ALLOWED_CORS_ORIGINS}
         # depends_on:
         #     - db
@@ -21,8 +21,6 @@ services:
         build: ./client
         ports:
             - "80:80"
-        environment:
-            - VITE_BACKEND_API_BASE_URL=http://backend:8443
         depends_on:
             - backend
 #     db:
