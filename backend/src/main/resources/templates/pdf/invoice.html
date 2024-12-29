@@ -2,15 +2,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${title}">Sample PDF</title>
+    <title th:text="${title}"></title>
     <style type="text/css">
+
         @page {
             size: A4 portrait;
             margin: 0;
         }
 
         body {
-            font-family: "Inter", sans-serif;
+            font-family: Arial, sans-serif;
             font-size: 16pt;
             margin: 0;
             padding: 10mm;
@@ -159,10 +160,10 @@
     <div class="billing-info">
         <div class="section-title">Billed to</div>
         <div class="section-content-2">
-            <div th:text="${invoice.student.name}" class="section-content my-1">Student Name</div>
-            <div th:text="${invoice.student.program.name}" class="my-1">Computer Science</div>
-            <div th:text="${invoice.student.level.name}" class="my-1">300 Level</div>
-            <div th:text="${invoice.student.email}">email@example.com</div>
+            <div th:text="${invoice.student.name}" class="section-content my-1"></div>
+            <div th:text="${invoice.student.program.name}" class="my-1"></div>
+            <div th:text="${invoice.student.level.name}" class="my-1"></div>
+            <div th:text="${invoice.student.email}"></div>
         </div>
 
         <div class="section-title" style="margin-top: 1.7cm;">Subject</div>
@@ -171,21 +172,21 @@
 
     <div class="invoice-info">
         <div class="section-title">Invoice Number</div>
-        <div class="section-content" th:text="${invoice.invoiceNumber}">#AB2324-01</div>
+        <div class="section-content" th:text="${invoice.invoiceNumber}"></div>
 
         <div class="section-title" style="margin-top: 1cm;">Matric number</div>
-        <div class="section-content" th:text="${invoice.student.registrationNumber}">20223902</div>
+        <div class="section-content" th:text="${student.registrationNumber}"></div>
 
         <div class="section-title" style="margin-top: 1cm;">Invoice date</div>
-        <div class="section-content" th:text="${invoice.invoiceDate}">01 Aug, 2023</div>
+        <div class="section-content" th:text="${#temporals.format(invoice.invoiceDate, 'dd MMM, YYYY')}"></div>
     </div>
 
     <div class="amount-info">
         <div class="section-title">Invoice of (NGN)</div>
-        <div class="amount" th:text="${invoice.amountDue}">NGN 3,100.00</div>
+        <div class="amount">NGN <span th:text="${invoice.amountDue}"/></div>
 
         <div class="section-title" style="margin-top: 2.9cm;">Due date</div>
-        <div class="section-content" th:text="${invoice.dueDate}">15 Aug, 2024</div>
+        <div class="section-content" th:text="${#temporals.format(invoice.dueDate, 'dd MMM, YYYY')}"></div>
     </div>
 </div>
 
@@ -205,8 +206,8 @@
             <div class="section-title" style="margin-bottom: 0;">NACOS DUES</div>
         </td>
         <td class="text-right">1</td>
-        <td class="text-right">NGN 3,000.00</td>
-        <td class="text-right">NGN 3,000.00</td>
+        <td class="text-right">NGN <span th:text="${invoice.amountDue}"/></td>
+        <td class="text-right">NGN <span th:text="${invoice.amountDue}"/></td>
     </tr>
     <tr>
         <td class="item-detail">
@@ -219,15 +220,15 @@
     </tr>
     </tbody>
     <tfoot>
-    <tr  style="font-weight: 500;">
+    <tr>
         <td colspan="2" class="total-row"></td>
-        <td class="total-row">Subtotal</td>
-        <td class="total-row text-right">NGN 3,100.00</td>
+        <td class="total-row" style="font-weight: 500;">Subtotal</td>
+        <td class="total-row text-right" style="font-weight: 500;">NGN <span th:text="${invoice.amountDue}"/></td>
     </tr>
     <tr>
         <td colspan="2"></td>
         <td  class="total-row">Total</td>
-        <td class=" total-row text-right">NGN 3,100.00</td>
+        <td class=" total-row text-right">NGN <span th:text="${invoice.amountDue}"/></td>
     </tr>
     </tfoot>
 </table>

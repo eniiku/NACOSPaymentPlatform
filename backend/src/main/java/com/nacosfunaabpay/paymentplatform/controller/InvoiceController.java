@@ -54,11 +54,10 @@ public class InvoiceController {
             context.setVariable("title", String.format("%s_%s_invoice",
                     invoice.getStudent().getRegistrationNumber(),
                     invoice.getInvoiceDate()));
-            context.setVariable("content", String.format("NACOS dues invoice for %s for the %s session",
-                    invoice.getStudent().getName(),
-                    invoice.getStudent().getAcademicYear().getYear()));
+            context.setVariable("invoice", invoice);
+            context.setVariable("student", invoice.getStudent());
 
-            byte[] pdfBytes = pdfGenerationService.generatePdf("receipt", context);
+            byte[] pdfBytes = pdfGenerationService.generatePdf("invoice", context);
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
