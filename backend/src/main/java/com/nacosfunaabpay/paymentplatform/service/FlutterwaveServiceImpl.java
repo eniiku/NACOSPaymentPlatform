@@ -86,7 +86,7 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
         requestMap.put("currency", "NGN");
         String REDIRECT_URL = frontendDomainUrl + "/verify";
         requestMap.put("redirect_url", REDIRECT_URL);
-        requestMap.put("payment_options", "card,ussd,banktransfer,account,internetbanking,nqr,applepay,googlepay,enaira,opay");
+        requestMap.put("payment_options", "banktransfer,opay,card,ussd,account,internetbanking,nqr,applepay,googlepay,enaira");
 
         // Customer details
         Map<String, String> customer = new HashMap<>();

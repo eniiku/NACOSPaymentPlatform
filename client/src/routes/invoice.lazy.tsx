@@ -105,7 +105,7 @@ function InvoicePage() {
 
             {/* INVOICE PAGE */}
             <div
-                className={`${isModalOpen ? "z-30" : "z-50"} sm:mb-0 sm:fixed inset-3.5 rounded-lg lg:border-[12px] border-white/30 bg-white p-6 md:w-[90vw] lg:w-[70vw] xl:w-[60vw] md:left-auto md:right-8 md:top-3 md:bottom-3`}
+                className={`${isModalOpen ? "z-10" : "z-50"} sm:mb-0 sm:fixed inset-3.5 rounded-lg lg:border-[12px] border-white/30 bg-white p-6 md:w-[90vw] lg:w-[70vw] xl:w-[60vw] md:left-auto md:right-8 md:top-3 md:bottom-3`}
             >
                 <div className="flex items-center justify-between">
                     <div className="p-1 space-y-2">
