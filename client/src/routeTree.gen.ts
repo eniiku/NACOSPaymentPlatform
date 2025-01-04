@@ -20,6 +20,7 @@ import { Route as VerifyErrorImport } from './routes/verify-error'
 const VerifyLazyImport = createFileRoute('/verify')()
 const SuccessLazyImport = createFileRoute('/success')()
 const InvoiceLazyImport = createFileRoute('/invoice')()
+const FindLazyImport = createFileRoute('/find')()
 const IndexLazyImport = createFileRoute('/')()
 
 // Create/Update Routes
@@ -38,6 +39,11 @@ const InvoiceLazyRoute = InvoiceLazyImport.update({
   path: '/invoice',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/invoice.lazy').then((d) => d.Route))
+
+const FindLazyRoute = FindLazyImport.update({
+  path: '/find',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/find.lazy').then((d) => d.Route))
 
 const VerifyErrorRoute = VerifyErrorImport.update({
   path: '/verify-error',
@@ -65,6 +71,13 @@ declare module '@tanstack/react-router' {
       path: '/verify-error'
       fullPath: '/verify-error'
       preLoaderRoute: typeof VerifyErrorImport
+      parentRoute: typeof rootRoute
+    }
+    '/find': {
+      id: '/find'
+      path: '/find'
+      fullPath: '/find'
+      preLoaderRoute: typeof FindLazyImport
       parentRoute: typeof rootRoute
     }
     '/invoice': {
@@ -96,6 +109,7 @@ declare module '@tanstack/react-router' {
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/verify-error': typeof VerifyErrorRoute
+  '/find': typeof FindLazyRoute
   '/invoice': typeof InvoiceLazyRoute
   '/success': typeof SuccessLazyRoute
   '/verify': typeof VerifyLazyRoute
@@ -104,6 +118,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/verify-error': typeof VerifyErrorRoute
+  '/find': typeof FindLazyRoute
   '/invoice': typeof InvoiceLazyRoute
   '/success': typeof SuccessLazyRoute
   '/verify': typeof VerifyLazyRoute
@@ -113,6 +128,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/verify-error': typeof VerifyErrorRoute
+  '/find': typeof FindLazyRoute
   '/invoice': typeof InvoiceLazyRoute
   '/success': typeof SuccessLazyRoute
   '/verify': typeof VerifyLazyRoute
@@ -120,16 +136,30 @@ export interface FileRoutesById {
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/verify-error' | '/invoice' | '/success' | '/verify'
+  fullPaths:
+    | '/'
+    | '/verify-error'
+    | '/find'
+    | '/invoice'
+    | '/success'
+    | '/verify'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/verify-error' | '/invoice' | '/success' | '/verify'
-  id: '__root__' | '/' | '/verify-error' | '/invoice' | '/success' | '/verify'
+  to: '/' | '/verify-error' | '/find' | '/invoice' | '/success' | '/verify'
+  id:
+    | '__root__'
+    | '/'
+    | '/verify-error'
+    | '/find'
+    | '/invoice'
+    | '/success'
+    | '/verify'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   VerifyErrorRoute: typeof VerifyErrorRoute
+  FindLazyRoute: typeof FindLazyRoute
   InvoiceLazyRoute: typeof InvoiceLazyRoute
   SuccessLazyRoute: typeof SuccessLazyRoute
   VerifyLazyRoute: typeof VerifyLazyRoute
@@ -138,6 +168,7 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   VerifyErrorRoute: VerifyErrorRoute,
+  FindLazyRoute: FindLazyRoute,
   InvoiceLazyRoute: InvoiceLazyRoute,
   SuccessLazyRoute: SuccessLazyRoute,
   VerifyLazyRoute: VerifyLazyRoute,
@@ -157,6 +188,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/verify-error",
+        "/find",
         "/invoice",
         "/success",
         "/verify"
@@ -167,6 +199,9 @@ export const routeTree = rootRoute
     },
     "/verify-error": {
       "filePath": "verify-error.tsx"
+    },
+    "/find": {
+      "filePath": "find.lazy.tsx"
     },
     "/invoice": {
       "filePath": "invoice.lazy.tsx"
