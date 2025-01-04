@@ -9,4 +9,7 @@ public interface FlutterwaveService {
     String initializePayment(Invoice invoice) throws IOException;
 
     PaymentVerificationResultDTO verifyPayment(String transactionId) throws RuntimeException;
+
+    PaymentVerificationResultDTO verifyPaymentByReference(String transactionReference) throws RuntimeException;
+
 }

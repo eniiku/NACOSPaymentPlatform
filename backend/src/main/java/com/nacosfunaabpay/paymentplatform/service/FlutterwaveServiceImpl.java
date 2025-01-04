@@ -184,6 +184,24 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
         }
     }
 
+    public PaymentVerificationResultDTO verifyPaymentByReference(String transactionReference) throws RuntimeException {
+        if (StringUtils.isBlank(transactionReference)) {
+            throw new RuntimeException("Transaction Reference cannot be empty");
+        }
+
+        logger.info("Initiating payment verification for transaction with reference: {}", transactionReference);
+        String url = String.format("%s/transactions/verify_by_reference?tx_ref=%s", FLUTTERWAVE_BASE_URL, transactionReference);
+
+        Request request = createVerificationRequest(url);
+
+        try (Response response = executeRequest(request)) {
+            return processVerificationResponse(response, transactionReference);
+        } catch (Exception e) {
+            handleVerificationError(transactionReference, e);
+            throw new RuntimeException("Payment verification failed", e);
+        }
+    }
+
     private Request createVerificationRequest(String url) {
         return new Request
                 .Builder().url(url)

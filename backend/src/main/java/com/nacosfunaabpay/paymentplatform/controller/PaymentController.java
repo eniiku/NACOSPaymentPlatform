@@ -127,4 +127,44 @@ public class PaymentController {
                     .body(new PaymentVerificationResultDTO(false, "error", "Unexpected error occurred", null));
         }
     }
+
+    @GetMapping("/verify-by-reference")
+    public ResponseEntity<PaymentVerificationResultDTO> verifyPayment(@RequestParam("tx_ref") String transactionRef) {
+
+        String invoiceNo = transactionRef.substring(0, transactionRef.lastIndexOf('-'));
+
+        logger.info("Verifying payment for transaction reference: {}, invoiceId: {}", transactionRef,
+                invoiceNo);
+        try {
+            PaymentVerificationResultDTO response = flutterwaveService.verifyPayment(transactionRef);
+
+            if (response.isSuccessful()) {
+                logger.info("Payment successful for invoice: {}", invoiceNo);
+                Invoice invoice = invoiceService.getInvoiceByInvoiceNumber(invoiceNo);
+                invoiceService.updateInvoiceStatus(invoiceNo, InvoiceStatus.PAID);
+
+                Map<String, Object> transactionDetails = response.getTransactionDetails();
+                String paymentType = (String) transactionDetails.get("payment_type");
+                String transactionId = (String) transactionDetails.get("id");
+
+                // Create payment record
+                Payment payment = paymentService.createPaymentRecord(invoice, transactionId, paymentType);
+
+                // Generate receipt and send email
+                Receipt receipt = receiptService.generateReceipt(payment);
+                receiptService.sendReceiptEmail(receipt);
+                response.setReceipt(receiptMapper.mapTo(receipt));
+
+                return ResponseEntity.ok(response);
+            } else {
+                logger.warn("Payment verification failed for invoice: {}", invoiceNo);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new PaymentVerificationResultDTO(false, "failed", "Payment verification failed", null));
+            }
+        } catch (Exception e) {
+            logger.error("Unexpected error during payment verification for invoice: {}", invoiceNo, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new PaymentVerificationResultDTO(false, "error", "Unexpected error occurred", null));
+        }
+    }
 }
