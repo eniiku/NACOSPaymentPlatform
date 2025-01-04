@@ -117,14 +117,14 @@ public class PaymentController {
 
                 return ResponseEntity.ok(response);
             } else {
-                logger.warn("Payment failed for invoice: {}", invoiceNo);
+                logger.warn("Payment verification failed for invoice: {}", invoiceNo);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new PaymentVerificationResultDTO(false, null, "Payment failed", null));
+                        .body(new PaymentVerificationResultDTO(false, "failed", "Payment verification failed", null));
             }
         } catch (Exception e) {
             logger.error("Unexpected error during payment verification for invoice: {}", invoiceNo, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new PaymentVerificationResultDTO(false, null, "Unexpected error occurred", null));
+                    .body(new PaymentVerificationResultDTO(false, "error", "Unexpected error occurred", null));
         }
     }
 }

@@ -3,11 +3,14 @@ import { apiClient } from "@/lib/api"
 import usePaymentStore from "@/lib/store/use-payment-store"
 import { createLazyFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
 import { HttpStatusCode } from "axios"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export const Route = createLazyFileRoute("/verify")({
     component: VerifyPage,
 })
+
+const MAX_RETRIES = 3
+const RETRY_DELAY = 2000
 
 function VerifyPage() {
     const search: { status: string; tx_ref: string; transaction_id: string } = useSearch({
@@ -16,6 +19,7 @@ function VerifyPage() {
 
     const navigate = useNavigate()
     const { setPayment } = usePaymentStore()
+    const [retryCount, setRetryCount] = useState(0)
 
     useEffect(() => {
         const txRef = search?.tx_ref
@@ -35,18 +39,46 @@ function VerifyPage() {
                 `/payments/verify?transaction_id=${transactionId}&trx_ref=${txRef}`
             )
 
-            if (res.status === HttpStatusCode.Ok) {
+            if (res.status === HttpStatusCode.Ok && res.data.status === "successful") {
                 setPayment(res.data)
                 navigate({ to: "/success" })
                 toast({
                     title: "Payment Successful!",
                     description: "Your payment has been processed successfully.",
                 })
+            }
+
+            // If verification failed and we haven't exceeded max retries
+            if (retryCount < MAX_RETRIES) {
+                setRetryCount((prev) => prev + 1)
+                setTimeout(() => {
+                    verifyTransaction(txRef, transactionId)
+                }, RETRY_DELAY)
             } else {
-                throw new Error("Transaction verifiction failed")
+                // Max retries reached, payment failed
+                toast({
+                    title: "Payment Verification Failed",
+                    description: "We couldn't verify your payment. Please contact support.",
+                    variant: "destructive",
+                })
+                navigate({ to: "/verify-error" })
             }
         } catch (error) {
             console.error("Verification error:", error)
+
+            if (retryCount < MAX_RETRIES) {
+                setRetryCount((prev) => prev + 1)
+                setTimeout(() => {
+                    verifyTransaction(txRef, transactionId)
+                }, RETRY_DELAY)
+            } else {
+                toast({
+                    title: "Verification Failed",
+                    description: "We couldn't verify your payment. Please contact support.",
+                    variant: "destructive",
+                })
+                navigate({ to: "/verify-error" })
+            }
         }
     }
 
@@ -57,6 +89,11 @@ function VerifyPage() {
 
                 <h1 className="text-2xl text-white/80 text-center">
                     Please wait, while we verify your payment...
+                    {retryCount > 0 && (
+                        <p className="text-sm mt-2">
+                            Verifying payment... Attempt {retryCount + 1} of {MAX_RETRIES + 1}
+                        </p>
+                    )}
                 </h1>
             </div>
         </div>
