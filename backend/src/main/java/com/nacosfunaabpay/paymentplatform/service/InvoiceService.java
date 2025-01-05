@@ -11,7 +11,7 @@ public interface InvoiceService {
 
     Invoice getInvoiceByInvoiceNumber(String invoiceNo);
 
-    void updateInvoiceStatus(String invoiceNo, InvoiceStatus status);
+    Invoice updateInvoiceStatus(String invoiceNo, InvoiceStatus status);
 
     void sendInvoiceEmail(Invoice invoice);
 }

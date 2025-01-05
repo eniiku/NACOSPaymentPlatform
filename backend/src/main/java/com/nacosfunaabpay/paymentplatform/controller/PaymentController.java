@@ -9,6 +9,7 @@ import com.nacosfunaabpay.paymentplatform.model.Invoice;
 import com.nacosfunaabpay.paymentplatform.model.Payment;
 import com.nacosfunaabpay.paymentplatform.model.Receipt;
 import com.nacosfunaabpay.paymentplatform.service.*;
+import io.micrometer.common.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -101,8 +102,7 @@ public class PaymentController {
 
             if (response.isSuccessful()) {
                 logger.info("Payment successful for invoice: {}", invoiceNo);
-                Invoice invoice = invoiceService.getInvoiceByInvoiceNumber(invoiceNo);
-                invoiceService.updateInvoiceStatus(invoiceNo, InvoiceStatus.PAID);
+                Invoice invoice = invoiceService.updateInvoiceStatus(invoiceNo, InvoiceStatus.PAID);
 
                 Map<String, Object> transactionDetails = response.getTransactionDetails();
                 String paymentType = (String) transactionDetails.get("payment_type");
@@ -129,14 +129,18 @@ public class PaymentController {
     }
 
     @GetMapping("/verify-by-reference")
-    public ResponseEntity<PaymentVerificationResultDTO> verifyPayment(@RequestParam("tx_ref") String transactionRef) {
+    public ResponseEntity<PaymentVerificationResultDTO> verifyPayment(@RequestParam(value = "tx_ref", required = true) String transactionRef) {
+
+        if (StringUtils.isBlank(transactionRef)) {
+            return ResponseEntity.badRequest()
+                    .body(new PaymentVerificationResultDTO(false, "error", "Transaction reference required", null));
+        }
 
         String invoiceNo = transactionRef.substring(0, transactionRef.lastIndexOf('-'));
 
-        logger.info("Verifying payment for transaction reference: {}, invoiceId: {}", transactionRef,
-                invoiceNo);
+        logger.info("Verifying payment for transaction reference: {}, ", transactionRef);
         try {
-            PaymentVerificationResultDTO response = flutterwaveService.verifyPayment(transactionRef);
+            PaymentVerificationResultDTO response = flutterwaveService.verifyPaymentByReference(transactionRef);
 
             if (response.isSuccessful()) {
                 logger.info("Payment successful for invoice: {}", invoiceNo);
@@ -162,7 +166,7 @@ public class PaymentController {
                         .body(new PaymentVerificationResultDTO(false, "failed", "Payment verification failed", null));
             }
         } catch (Exception e) {
-            logger.error("Unexpected error during payment verification for invoice: {}", invoiceNo, e);
+            logger.error("Unexpected error during payment verification for transaction reference: {}", transactionRef, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new PaymentVerificationResultDTO(false, "error", "Unexpected error occurred", null));
         }

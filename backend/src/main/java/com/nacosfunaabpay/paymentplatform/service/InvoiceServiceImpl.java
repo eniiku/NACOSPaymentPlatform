@@ -69,12 +69,15 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     @Transactional
-    public void updateInvoiceStatus(String invoiceNo, InvoiceStatus status) {
+    public Invoice updateInvoiceStatus(String invoiceNo, InvoiceStatus status) {
         logger.info("Updating invoice status. Invoice ID: {}, New status: {}", invoiceNo, status);
+
         Invoice invoice = getInvoiceByInvoiceNumber(invoiceNo);
         invoice.setInvoiceStatus(status.getStatus());
         invoice.setUpdatedAt(LocalDateTime.now());
         invoiceRepository.save(invoice);
+
+        return invoice;
     }
 
     @Override
