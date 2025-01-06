@@ -27,6 +27,8 @@ import { toast } from "@/hooks/use-toast"
 import { useState } from "react"
 import axios from "axios"
 import LoadingSpinner from "@/components/util/loading-spinner"
+import { Download } from "lucide-react"
+import { usePDFDownload } from "@/hooks/use-pdf-download"
 
 export const Route = createLazyFileRoute("/find")({
     component: FindPage,
@@ -34,7 +36,10 @@ export const Route = createLazyFileRoute("/find")({
 
 function FindPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [paymentDetails, setPaymentDetails] = useState(null)
+    const [paymentDetails, setPaymentDetails] = useState<string>("")
+    const [registrationNo, studentRegistrationNo] = useState<string>("")
+
+    const { downloading, downloadPDF } = usePDFDownload()
 
     const form = useForm<z.infer<typeof findFormSchema>>({
         resolver: zodResolver(findFormSchema),
@@ -45,6 +50,7 @@ function FindPage() {
 
     const onSubmit = async (values: z.infer<typeof findFormSchema>) => {
         setIsLoading(true)
+        studentRegistrationNo(values.registrationNo)
         try {
             const detailsResponse = await apiClient.get<string>(
                 `/payments/retrieve-details?reg_no=${values.registrationNo}`
@@ -84,9 +90,12 @@ function FindPage() {
         }
     }
 
-    if (paymentDetails) {
-        return <div>payment details</div>
-    }
+    const handleDownloadReceipt = () =>
+        downloadPDF({
+            type: "receipt",
+            studentRegistrationNo: registrationNo as string,
+            identifier: paymentDetails as string,
+        })
 
     return (
         <div className="min-h-[90svh] text-white flex flex-col justify-start items-center pt-14 md:pt-20 relative">
@@ -108,83 +117,125 @@ function FindPage() {
                     </p>
                 </div>
 
-                <Form {...form}>
-                    <form
-                        onSubmit={form.handleSubmit(onSubmit, (errors) => {
-                            console.log("Form validation errors:", errors)
-                        })}
-                        className="w-full bg-white border-[12px] border-white/15 p-3 max-w-[780px] rounded-md space-y-6 text-black"
-                    >
-                        <div className="space-y-3 md:space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="registrationNo"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Input
-                                                placeholder="Matric / Jamb Number"
-                                                className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormDescription />
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                {paymentDetails ? (
+                    <div className="w-full bg-white border-[12px] border-white/15 p-3 max-w-[780px] rounded-md space-y-16 text-black">
+                        <div className="flex justify-between">
+                            <div className="flex gap-4 items-start">
+                                <img src="/check.svg" width={48} height={48} alt="" />
+                                <div className="">
+                                    <h3 className="text-2xl font-bold text-black/90">
+                                        Receipt Found
+                                    </h3>
+                                    <p className="text-[18px] leading-6 text-black/60">
+                                        You can download your receipt here
+                                    </p>
+                                </div>
+                            </div>
 
-                            <FormField
-                                control={form.control}
-                                name="level"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                            >
-                                                <SelectTrigger className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium">
-                                                    <SelectValue placeholder="Select Level" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {LEVELS.map((level) => (
-                                                        <SelectItem
-                                                            key={level.key}
-                                                            value={level.key}
-                                                            className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium uppercase"
-                                                        >
-                                                            {level.name}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </FormControl>
-                                        <FormDescription />
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            <div></div>
                         </div>
 
                         <Button
-                            type="submit"
-                            disabled={isLoading}
-                            className="h-auto w-full py-3 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-emerald-700"
+                            onClick={handleDownloadReceipt}
+                            disabled={downloading}
+                            className="h-auto py-4 px-16 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-custom-green"
                         >
-                            {!isLoading ? (
+                            {!downloading ? (
                                 <>
-                                    RETRIEVE MY RECEIPT{" "}
+                                    Download PDF{" "}
                                     <span>
-                                        <img src="/arrow-right.svg" alt="" width={20} height={20} />
+                                        <Download width={20} height={20} />
                                     </span>
                                 </>
                             ) : (
                                 <LoadingSpinner />
                             )}
                         </Button>
-                    </form>
-                </Form>
+                    </div>
+                ) : (
+                    <Form {...form}>
+                        <form
+                            onSubmit={form.handleSubmit(onSubmit, (errors) => {
+                                console.log("Form validation errors:", errors)
+                            })}
+                            className="w-full bg-white border-[12px] border-white/15 p-3 max-w-[780px] rounded-md space-y-6 text-black"
+                        >
+                            <div className="space-y-3 md:space-y-4">
+                                <FormField
+                                    control={form.control}
+                                    name="registrationNo"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="Matric / Jamb Number"
+                                                    className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
+                                                    {...field}
+                                                />
+                                            </FormControl>
+                                            <FormDescription />
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+
+                                <FormField
+                                    control={form.control}
+                                    name="level"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormControl>
+                                                <Select
+                                                    onValueChange={field.onChange}
+                                                    defaultValue={field.value}
+                                                >
+                                                    <SelectTrigger className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium">
+                                                        <SelectValue placeholder="Select Level" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {LEVELS.map((level) => (
+                                                            <SelectItem
+                                                                key={level.key}
+                                                                value={level.key}
+                                                                className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium uppercase"
+                                                            >
+                                                                {level.name}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </FormControl>
+                                            <FormDescription />
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            </div>
+
+                            <Button
+                                type="submit"
+                                disabled={isLoading}
+                                className="h-auto w-full py-3 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-custom-green"
+                            >
+                                {!isLoading ? (
+                                    <>
+                                        RETRIEVE MY RECEIPT{" "}
+                                        <span>
+                                            <img
+                                                src="/arrow-right.svg"
+                                                alt=""
+                                                width={20}
+                                                height={20}
+                                            />
+                                        </span>
+                                    </>
+                                ) : (
+                                    <LoadingSpinner />
+                                )}
+                            </Button>
+                        </form>
+                    </Form>
+                )}
             </div>
         </div>
     )
