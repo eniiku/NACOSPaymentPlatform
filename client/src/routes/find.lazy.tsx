@@ -104,7 +104,7 @@ function FindPage() {
             <img
                 src="/images/overlay.webp"
                 alt=""
-                className="absolute left-0 bottom-0 z-10 w-[240px] md:w-auto"
+                className="absolute left-0 bottom-0 z-10 w-[240px] md:w-[400px]"
                 width={400}
             />
 
