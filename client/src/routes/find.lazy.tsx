@@ -19,16 +19,73 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { LEVELS } from "@/lib/data"
+import { z } from "zod"
+import { findFormSchema } from "@/lib/schema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { apiClient } from "@/lib/api"
+import { toast } from "@/hooks/use-toast"
+import { useState } from "react"
+import axios from "axios"
+import LoadingSpinner from "@/components/util/loading-spinner"
 
 export const Route = createLazyFileRoute("/find")({
     component: FindPage,
 })
 
 function FindPage() {
-    const form = useForm()
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [paymentDetails, setPaymentDetails] = useState(null)
 
-    const onSubmit = () => {
-        console.log("big bunda's probably getting dicked out crazy now")
+    const form = useForm<z.infer<typeof findFormSchema>>({
+        resolver: zodResolver(findFormSchema),
+        defaultValues: {
+            registrationNo: "",
+        },
+    })
+
+    const onSubmit = async (values: z.infer<typeof findFormSchema>) => {
+        setIsLoading(true)
+        try {
+            const detailsResponse = await apiClient.get<string>(
+                `/payments/retrieve-details?reg_no=${values.registrationNo}`
+            )
+
+            const txRef = detailsResponse.data
+            if (!txRef) throw new Error("No transaction reference found")
+
+            const verificationResponse = await apiClient.get(
+                `/payments/verify-by-reference?tx_ref=${txRef}`
+            )
+
+            setPaymentDetails(verificationResponse.data)
+
+            toast({
+                title: "Payment verified successfully",
+                description: "Your payment details have been retrieved.",
+            })
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data?.message || error.message
+                toast({
+                    variant: "destructive",
+                    title: "Verification Failed",
+                    description: errorMessage,
+                })
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Unexpected Error",
+                    description: "An unexpected error occurred. Please try again.",
+                })
+            }
+            console.error("[Payment Verification Error]: ", error)
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    if (paymentDetails) {
+        return <div>payment details</div>
     }
 
     return (
@@ -53,18 +110,20 @@ function FindPage() {
 
                 <Form {...form}>
                     <form
-                        onSubmit={form.handleSubmit(onSubmit)}
-                        className="w-full bg-white border-[12px] border-white/15 p-3 max-w-[780px] rounded-md space-y-6"
+                        onSubmit={form.handleSubmit(onSubmit, (errors) => {
+                            console.log("Form validation errors:", errors)
+                        })}
+                        className="w-full bg-white border-[12px] border-white/15 p-3 max-w-[780px] rounded-md space-y-6 text-black"
                     >
                         <div className="space-y-3 md:space-y-4">
                             <FormField
                                 control={form.control}
-                                name="matricNo"
+                                name="registrationNo"
                                 render={({ field }) => (
                                     <FormItem>
                                         <FormControl>
                                             <Input
-                                                placeholder="First Name"
+                                                placeholder="Matric / Jamb Number"
                                                 className="bg-[#F3F3F3] rounded py-4 px-5 h-auto text-sm md:text-lg font-medium"
                                                 {...field}
                                             />
@@ -110,12 +169,19 @@ function FindPage() {
 
                         <Button
                             type="submit"
+                            disabled={isLoading}
                             className="h-auto w-full py-3 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-emerald-700"
                         >
-                            RETRIEVE MY RECEIPT{" "}
-                            <span>
-                                <img src="/arrow-right.svg" alt="" width={20} height={20} />
-                            </span>
+                            {!isLoading ? (
+                                <>
+                                    RETRIEVE MY RECEIPT{" "}
+                                    <span>
+                                        <img src="/arrow-right.svg" alt="" width={20} height={20} />
+                                    </span>
+                                </>
+                            ) : (
+                                <LoadingSpinner />
+                            )}
                         </Button>
                     </form>
                 </Form>

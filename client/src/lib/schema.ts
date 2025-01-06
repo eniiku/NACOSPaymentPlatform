@@ -48,3 +48,22 @@ export const userFormSchema = z.object({
         message: "Please enter a valid phone number (e.g., +2348012345678 or 08012345678)",
     }),
 })
+
+export const findFormSchema = z.object({
+    registrationNo: z
+        .string()
+        .min(8, {
+            message: "Registration number must be at least 8 characters",
+        })
+        .max(14, {
+            message: "Registration number cannot exceed 14 characters",
+        })
+        .regex(/^[A-Z0-9]+$/, {
+            message: "Registration number can only contain uppercase letters and numbers",
+        }),
+    level: z.enum(["L100", "L200", "L200F", "L300", "L400"], {
+        errorMap: () => ({
+            message: "Please select your current level",
+        }),
+    }),
+})
