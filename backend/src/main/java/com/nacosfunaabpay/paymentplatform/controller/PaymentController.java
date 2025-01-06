@@ -129,7 +129,7 @@ public class PaymentController {
     }
 
     @GetMapping("/verify-by-reference")
-    public ResponseEntity<PaymentVerificationResultDTO> verifyPayment(@RequestParam(value = "tx_ref", required = true) String transactionRef) {
+    public ResponseEntity<?> verifyPayment(@RequestParam(value = "tx_ref", required = true) String transactionRef) {
 
         if (StringUtils.isBlank(transactionRef)) {
             return ResponseEntity.badRequest()
@@ -148,18 +148,16 @@ public class PaymentController {
                 invoiceService.updateInvoiceStatus(invoiceNo, InvoiceStatus.PAID);
 
                 Map<String, Object> transactionDetails = response.getTransactionDetails();
-                String paymentType = (String) transactionDetails.get("payment_type");
-                String transactionId = (String) transactionDetails.get("id");
+                String paymentType = String.valueOf(transactionDetails.get("payment_type"));
+                String transactionId = String.valueOf(transactionDetails.get("id"));
 
                 // Create payment record
                 Payment payment = paymentService.createPaymentRecord(invoice, transactionId, paymentType);
 
                 // Generate receipt and send email
                 Receipt receipt = receiptService.generateReceipt(payment);
-                receiptService.sendReceiptEmail(receipt);
-                response.setReceipt(receiptMapper.mapTo(receipt));
 
-                return ResponseEntity.ok(response);
+                return ResponseEntity.ok(receipt.getId());
             } else {
                 logger.warn("Payment verification failed for invoice: {}", invoiceNo);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
