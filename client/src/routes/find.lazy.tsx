@@ -38,6 +38,7 @@ function FindPage() {
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [paymentDetails, setPaymentDetails] = useState<string>("")
     const [registrationNo, studentRegistrationNo] = useState<string>("")
+    const [error, setError] = useState(false)
 
     const { downloading, downloadPDF } = usePDFDownload()
 
@@ -70,6 +71,7 @@ function FindPage() {
                 description: "Your payment details have been retrieved.",
             })
         } catch (error) {
+            setError(true)
             if (axios.isAxiosError(error)) {
                 const errorMessage = error.response?.data?.message || error.message
                 toast({
@@ -117,7 +119,32 @@ function FindPage() {
                     </p>
                 </div>
 
-                {paymentDetails ? (
+                {error ? (
+                    <div className="w-full bg-white border-[12px] border-white/15 p-3 max-w-[780px] rounded-md space-y-16 text-black">
+                        <div className="flex justify-between">
+                            <div className="flex gap-4 items-start">
+                                <img src="/check-failed.svg" width={52} height={52} alt="" />
+                                <div className="">
+                                    <h3 className="text-2xl font-bold text-black/90">
+                                        Sorry, couldn't find receipt
+                                    </h3>
+                                    <p className="text-[18px] leading-6 text-black/60">
+                                        Check your matric number and level to see if it's correct
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div></div>
+                        </div>
+
+                        <Button
+                            onClick={() => setError(false)}
+                            className="h-auto py-4 px-16 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-custom-green"
+                        >
+                            Try Again
+                        </Button>
+                    </div>
+                ) : paymentDetails ? (
                     <div className="w-full bg-white border-[12px] border-white/15 p-3 max-w-[780px] rounded-md space-y-16 text-black">
                         <div className="flex justify-between">
                             <div className="flex gap-4 items-start">
