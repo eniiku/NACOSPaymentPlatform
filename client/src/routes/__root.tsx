@@ -1,4 +1,4 @@
-import Footer from "@/components/ui/navigation/footer"
+import Footer from "@/components/navigation/footer"
 import { Toaster } from "@/components/ui/toaster"
 import { createRootRoute, Outlet } from "@tanstack/react-router"
 

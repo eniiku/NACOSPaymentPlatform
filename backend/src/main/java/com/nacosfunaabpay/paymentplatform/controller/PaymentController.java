@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/payments")
@@ -145,7 +146,14 @@ public class PaymentController {
             if (response.isSuccessful()) {
                 logger.info("Payment successful for invoice: {}", invoiceNo);
                 Invoice invoice = invoiceService.getInvoiceByInvoiceNumber(invoiceNo);
-                invoiceService.updateInvoiceStatus(invoiceNo, InvoiceStatus.PAID);
+
+                System.out.println("Invoice Status" + invoice.getInvoiceStatus());
+
+                if (!Objects.equals(invoice.getInvoiceStatus(), InvoiceStatus.PAID.toString())) {
+                    logger.info("Invoice {} is already paid. Skipping status update.", invoiceNo);
+                } else {
+                    invoiceService.updateInvoiceStatus(invoiceNo, InvoiceStatus.PAID);
+                }
 
                 Map<String, Object> transactionDetails = response.getTransactionDetails();
                 String paymentType = String.valueOf(transactionDetails.get("payment_type"));
