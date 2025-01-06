@@ -104,7 +104,7 @@ function FindPage() {
             <img
                 src="/images/overlay.webp"
                 alt=""
-                className="absolute left-0 bottom-0 z-10"
+                className="absolute left-0 bottom-0 z-10 w-[240px] md:w-auto"
                 width={400}
             />
 
@@ -123,12 +123,18 @@ function FindPage() {
                     <div className="w-full bg-white border-[12px] border-white/15 p-3 max-w-[780px] rounded-md space-y-16 text-black">
                         <div className="flex justify-between">
                             <div className="flex gap-4 items-start">
-                                <img src="/check-failed.svg" width={52} height={52} alt="" />
+                                <img
+                                    src="/check-failed.svg"
+                                    className="w-8 h-8 md:w-auto md:h-auto"
+                                    width={52}
+                                    height={52}
+                                    alt=""
+                                />
                                 <div className="">
-                                    <h3 className="text-2xl font-bold text-black/90">
+                                    <h3 className="text-lg md:text-2xl font-bold text-black/90">
                                         Sorry, couldn't find receipt
                                     </h3>
-                                    <p className="text-[18px] leading-6 text-black/60">
+                                    <p className="text-sm md:text-lg text-black/60">
                                         Check your matric number and level to see if it's correct
                                     </p>
                                 </div>
@@ -147,13 +153,19 @@ function FindPage() {
                 ) : paymentDetails ? (
                     <div className="w-full bg-white border-[12px] border-white/15 p-3 max-w-[780px] rounded-md space-y-16 text-black">
                         <div className="flex justify-between">
-                            <div className="flex gap-4 items-start">
-                                <img src="/check.svg" width={48} height={48} alt="" />
+                            <div className="flex gap-1 md:gap-4 items-start">
+                                <img
+                                    src="/check.svg"
+                                    className="w-7 h-7 md:w-auto md:h-auto"
+                                    width={48}
+                                    height={48}
+                                    alt=""
+                                />
                                 <div className="">
-                                    <h3 className="text-2xl font-bold text-black/90">
+                                    <h3 className="text-lg md:text-2xl font-bold text-black/90">
                                         Receipt Found
                                     </h3>
-                                    <p className="text-[18px] leading-6 text-black/60">
+                                    <p className="text-sm md:text-lgtext-black/60">
                                         You can download your receipt here
                                     </p>
                                 </div>
@@ -165,7 +177,7 @@ function FindPage() {
                         <Button
                             onClick={handleDownloadReceipt}
                             disabled={downloading}
-                            className="h-auto py-4 px-16 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-custom-green"
+                            className="h-auto py-4 px-16 md:py-4 mt-6 rounded-md font-bold text-sm md:text-base flex items-center gap-2.5 bg-custom-green min-w-[238px]"
                         >
                             {!downloading ? (
                                 <>
