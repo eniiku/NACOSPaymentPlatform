@@ -169,4 +169,27 @@ public class PaymentController {
                     .body(new PaymentVerificationResultDTO(false, "error", "Unexpected error occurred", null));
         }
     }
+
+    @GetMapping("retrieve-details")
+    public ResponseEntity<?> retrieveTransactionDetails(@RequestParam(value = "reg_no", required = true) String registrationNo) {
+
+        if (StringUtils.isBlank(registrationNo)) {
+            return ResponseEntity.badRequest()
+                    .body(new PaymentVerificationResultDTO(false, "error", "Matric Number required", null));
+        }
+
+
+        logger.info("Fetching transaction details for student with registration number: {}, ", registrationNo);
+
+        try {
+            String response = flutterwaveService.extractTransactionRefFromPaymentDetails(registrationNo);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            logger.error("Unexpected error while trying to fetch transactions for student with registraton number : {}", registrationNo, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new PaymentVerificationResultDTO(false, "error", "Unexpected error occurred", null));
+        }
+
+    }
 }

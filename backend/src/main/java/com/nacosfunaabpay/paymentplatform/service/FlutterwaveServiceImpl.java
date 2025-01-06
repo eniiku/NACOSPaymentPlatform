@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.nacosfunaabpay.paymentplatform.dtos.PaymentVerificationResultDTO;
 import com.nacosfunaabpay.paymentplatform.model.Invoice;
+import com.nacosfunaabpay.paymentplatform.model.Student;
+import com.nacosfunaabpay.paymentplatform.repositories.StudentRepository;
 import io.micrometer.common.util.StringUtils;
 import okhttp3.*;
 import org.slf4j.Logger;
@@ -14,10 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -33,15 +32,18 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
 
     private final OkHttpClient client;
     private final Gson gson;
+    private final StudentRepository studentRepository;
 
     private final String FLUTTERWAVE_BASE_URL = "https://api.flutterwave.com/v3";
 
 
-    public FlutterwaveServiceImpl() {
+    public FlutterwaveServiceImpl(StudentRepository studentRepository) {
         // Configure OkHttpClient with timeouts and connection pool
         this.client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS).retryOnConnectionFailure(true).build();
 
         this.gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+
+        this.studentRepository = studentRepository;
     }
 
     public String initializePayment(Invoice invoice) throws RuntimeException {
@@ -199,6 +201,43 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
         } catch (Exception e) {
             handleVerificationError(transactionReference, e);
             throw new RuntimeException("Payment verification failed", e);
+        }
+    }
+
+    public String extractTransactionRefFromPaymentDetails(String registrationNo) throws RuntimeException {
+
+        Optional<Student> student = studentRepository.findByRegistrationNumber(registrationNo);
+
+        String studentFullName = String.format("%s", student.get().getName());
+        String studentEmail = student.get().getEmail();
+
+
+        logger.info("Initiating fetch for transaction details for customer with registration Number: {}", registrationNo);
+        String url = String.format("%s/transactions/?customer_email=%s&customer_fullname=%s", FLUTTERWAVE_BASE_URL, studentEmail, studentFullName);
+
+        Request request = createVerificationRequest(url);
+
+
+        try (Response response = executeRequest(request)) {
+
+            String responseBody = response.body() != null ? response.body().string() : null;
+            if (responseBody == null) {
+                throw new RuntimeException("Empty response from payment gateway");
+            }
+
+            Map<String, Object> responseMap = gson.fromJson(responseBody, Map.class);
+
+            List<Map<String, Object>> dataList = (List<Map<String, Object>>) responseMap.get("data");
+
+            Map<String, Object> firstTransaction = dataList.get(0);
+            String txRef = (String) firstTransaction.get("tx_ref");
+
+            logger.info("Transaction reference found for registration number: {}", registrationNo);
+
+            return txRef;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch transaction details", e);
+
         }
     }
 
