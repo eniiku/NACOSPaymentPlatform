@@ -214,13 +214,12 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
                         String.format("No student found with registration number: %s", registrationNo)
                 ));
 
-        String studentFullName = student.getName();
         String studentEmail = student.getEmail();
 
         String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         logger.info("Initiating fetch for transaction details for customer with registration Number: {}", registrationNo);
-        String url = String.format("%s/transactions/?customer_email=%s&customer_fullname=%s&from=2024-12-25&to=%s", FLUTTERWAVE_BASE_URL, studentEmail, studentFullName, currentDate);
+        String url = String.format("%s/transactions/?customer_email=%s&from=2024-12-25&to=%s", FLUTTERWAVE_BASE_URL, studentEmail, currentDate);
 
         Request request = createVerificationRequest(url);
 
