@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -212,12 +214,13 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
                         String.format("No student found with registration number: %s", registrationNo)
                 ));
 
-        String studentFullName = String.format("%s", student.getName());
+        String studentFullName = student.getName();
         String studentEmail = student.getEmail();
 
+        String currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
         logger.info("Initiating fetch for transaction details for customer with registration Number: {}", registrationNo);
-        String url = String.format("%s/transactions/?customer_email=%s&customer_fullname=%s", FLUTTERWAVE_BASE_URL, studentEmail, studentFullName);
+        String url = String.format("%s/transactions/?customer_email=%s&customer_fullname=%s&from=2024-12-25&to=%s", FLUTTERWAVE_BASE_URL, studentEmail, studentFullName, currentDate);
 
         Request request = createVerificationRequest(url);
 
@@ -230,8 +233,6 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
             }
 
             Map<String, Object> responseMap = gson.fromJson(responseBody, Map.class);
-
-            System.out.println("response " +  responseMap);
 
             List<Map<String, Object>> dataList = (List<Map<String, Object>>) responseMap.get("data");
 
