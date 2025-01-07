@@ -206,10 +206,14 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
 
     public String extractTransactionRefFromPaymentDetails(String registrationNo) throws RuntimeException {
 
-        Optional<Student> student = studentRepository.findByRegistrationNumber(registrationNo);
+        // First, find and validate student
+        Student student = studentRepository.findByRegistrationNumber(registrationNo)
+                .orElseThrow(() -> new RuntimeException(
+                        String.format("No student found with registration number: %s", registrationNo)
+                ));
 
-        String studentFullName = String.format("%s", student.get().getName());
-        String studentEmail = student.get().getEmail();
+        String studentFullName = String.format("%s", student.getName());
+        String studentEmail = student.getEmail();
 
 
         logger.info("Initiating fetch for transaction details for customer with registration Number: {}", registrationNo);
@@ -226,6 +230,8 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
             }
 
             Map<String, Object> responseMap = gson.fromJson(responseBody, Map.class);
+
+            System.out.println("response " +  responseMap);
 
             List<Map<String, Object>> dataList = (List<Map<String, Object>>) responseMap.get("data");
 
