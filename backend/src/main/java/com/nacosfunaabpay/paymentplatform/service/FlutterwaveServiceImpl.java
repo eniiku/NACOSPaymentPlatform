@@ -233,17 +233,40 @@ public class FlutterwaveServiceImpl implements FlutterwaveService {
 
             Map<String, Object> responseMap = gson.fromJson(responseBody, Map.class);
 
-            List<Map<String, Object>> dataList = (List<Map<String, Object>>) responseMap.get("data");
+            List<Map<String, Object>> transactions = Optional.ofNullable((List<Map<String, Object>>) responseMap.get("data"))
+                    .orElseThrow(() -> new RuntimeException("No transaction data found"));
 
-            Map<String, Object> firstTransaction = dataList.get(0);
-            String txRef = (String) firstTransaction.get("tx_ref");
+            // Find the first successful transaction
+            String txRef = transactions.stream()
+                    .filter(transaction -> isValidTransaction(transaction))
+                    .map(transaction -> (String) transaction.get("tx_ref"))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException(
+                            String.format("No valid transaction found for registration number: %s", registrationNo)));
 
-            logger.info("Transaction reference found for registration number: {}", registrationNo);
-
+            logger.info("Valid transaction reference found for registration number: {}", registrationNo);
             return txRef;
         } catch (Exception e) {
             throw new RuntimeException("Failed to fetch transaction details", e);
 
+        }
+    }
+
+    private boolean isValidTransaction(Map<String, Object> transaction) {
+        try {
+            // Add your transaction validation logic here
+            String status = (String) transaction.get("status");
+            String currency = (String) transaction.get("currency");
+            Double amount = ((Number) transaction.get("amount")).doubleValue();
+
+            // Example validation conditions - adjust according to your needs
+            return "successful".equalsIgnoreCase(status)
+                    && "NGN".equalsIgnoreCase(currency)
+                    && amount > 0;
+            // Add more validation conditions as needed
+        } catch (Exception e) {
+            logger.warn("Error validating transaction: {}", e.getMessage());
+            return false;
         }
     }
 
