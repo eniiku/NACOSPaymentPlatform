@@ -100,11 +100,11 @@ function FindPage() {
         })
 
     return (
-        <div className="min-h-[90svh] text-white flex flex-col justify-start items-center pt-14 md:pt-20 relative">
+        <div className="min-h-[90svh] text-white flex flex-col justify-start items-center pt-14 md:pt-20 relative z-10">
             <img
                 src="/images/overlay.webp"
                 alt=""
-                className="absolute left-0 bottom-0 z-10 w-[240px] md:w-[400px]"
+                className="absolute left-0 bottom-0 -z-10 w-[240px] md:w-[400px]"
                 width={400}
             />
 
